@@ -13,96 +13,112 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
     <style>
-        /* Make the whole page fixed to one viewport */
         body, html {
             height: 100%;
             margin: 0;
-            overflow: hidden; /* Prevent scrolling */
+            overflow: hidden;
         }
 
         .contact-section {
-            height: 100vh; /* Full screen height */
+            height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
             background: url('/img/contact-bg.jpg') no-repeat center center;
             background-size: cover;
-            text-align: center;
-        }
-
-        .contact-card {
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 10px;
+            text-align: left;
             padding: 40px;
-            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
-            color: #333;
-            width: 500px;
-            max-width: 90%;
+            color: black;
         }
 
-            .contact-card h3 {
-                font-size: 1.8rem;
-                font-weight: bold;
-            }
-
-        .contact-info p {
-            font-size: 1.2rem;
-            margin-bottom: 10px;
+        .contact-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 80%;
+            max-width: 1000px;
         }
 
-        .contact-info i {
-            font-size: 1.5rem;
-            margin-right: 10px;
-            color: #007bff;
-        }
-
-        .form-control {
-            border-radius: 5px;
+        .contact-info {
+            flex: 1;
+            padding-left: 40px;
+            border-left: 4px solid #06183B;
             font-size: 1.1rem;
         }
 
+            .contact-info h4 {
+                font-size: 1.5rem;
+            }
+
+            .contact-info p {
+                margin-bottom: 12px;
+            }
+
+
+        .contact-form {
+            flex: 1;
+            padding-right: 20px;
+            color: black;
+        }
+
+        .form-floating label {
+            color: #666;
+        }
+
+        .form-control {
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+
         .btn-custom {
-            background-color: #007bff;
+            background-color: #06183B;
             color: white;
             padding: 12px;
             font-size: 1.2rem;
-            border-radius: 5px;
+            border-radius: 8px;
+            transition: background 0.3s ease;
         }
 
             .btn-custom:hover {
-                background-color: #0056b3;
+                background-color: #F4A600;
+                color: white
             }
-
     </style>
 </head>
 <body>
 
     <!-- Contact Us Section -->
     <section class="contact-section">
-        <div class="contact-card">
-            <h3>Contact Us</h3>
-            <p>We're here to help! Get in touch with us for any inquiries.</p>
-
-            <!-- Contact Info -->
-            <div class="contact-info">
-                <p><i class="fas fa-map-marker-alt"></i> Sanciangko St., Cebu City</p>
-                <p><i class="fas fa-phone"></i> +1 234 567 890</p>
-                <p><i class="fas fa-envelope"></i> support@booktel.com</p>
-            </div>
-
-            <!-- Contact Form -->
-            <form>
-                <div class="mb-3">
-                    <input type="text" class="form-control" placeholder="Your Name" required>
+        <div class="contact-container">
+            <!-- Contact Form on Left -->
+            <form class="contact-form w-50">
+                <h3>Contact Us</h3>
+                <div class="form-floating mb-3">
+                    <input type="text" class="form-control" id="name" placeholder="Your Name" required>
+                    <label for="name">Your Name</label>
                 </div>
-                <div class="mb-3">
-                    <input type="email" class="form-control" placeholder="Your Email" required>
+                <div class="form-floating mb-3">
+                    <input type="email" class="form-control" id="email" placeholder="Your Email" required>
+                    <label for="email">Your Email</label>
                 </div>
-                <div class="mb-3">
-                    <textarea class="form-control" rows="3" placeholder="Your Message" required></textarea>
+                <div class="form-floating mb-3">
+                    <textarea class="form-control" id="message" placeholder="Your Message" style="height: 100px;" required></textarea>
+                    <label for="message">Your Message</label>
                 </div>
                 <button type="submit" class="btn btn-custom w-100">Send Message</button>
             </form>
+
+            <!-- Contact Info on Right -->
+            <!-- Contact Info on Right -->
+            <div class="contact-info text-start">
+                <h4 class="fw-bold mb-3">Get in Touch</h4>
+                <p class="text-muted">We’d love to hear from you! Reach out for any questions or assistance.</p>
+
+                <p><i class="fas fa-map-marker-alt text-warning me-2"></i> Sanciangko St., Cebu City</p>
+                <p><i class="fas fa-phone text-warning me-2"></i> +1 234 567 890</p>
+                <p><i class="fas fa-envelope text-warning me-2"></i> support@booktel.com</p>
+            </div>
+
         </div>
     </section>
 

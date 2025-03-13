@@ -23,10 +23,10 @@ namespace NewBooktel.Controllers
             return View("UserDash/Reservation");
         }
 
-        public IActionResult About()
-        {
-            return View();
-        }
+        //public IActionResult About()
+        //{
+        //    return View();
+        //}
 
         public IActionResult Contact()
         {
