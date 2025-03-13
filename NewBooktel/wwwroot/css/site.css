@@ -1,0 +1,48 @@
+/* Navbar Styling */
+
+
+
+.bg-dark-blue {
+    background-color: #06183B !important;
+}
+
+.navbar-brand {
+    font-size: 1.5rem;
+}
+
+.nav-link {
+    color: white !important;
+}
+
+    .nav-link.active, .nav-link:hover {
+        color: #ffc107 !important;
+    }
+
+
+
+/* Remove all default margin and padding */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Ensure the full width and height are used */
+html, body {
+    width: 100%;
+    height: 100%;
+    overflow-x: hidden;
+}
+
+/* Remove unwanted spacing in the navbar */
+.navbar, .container, .container-fluid {
+    margin: 0;
+    padding: 0;
+}
+
+/* Ensure sections take full width */
+section, main {
+    padding: 0;
+    margin: 0;
+    width: 100%;
+}
