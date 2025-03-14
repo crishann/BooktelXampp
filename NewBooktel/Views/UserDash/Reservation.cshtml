@@ -1,0 +1,230 @@
+﻿@{
+    ViewData["Title"] = "Reservation";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BookTel - Hotel Reservation</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+            background: #f8f9fa;
+        }
+
+        /* Main Container */
+        .main-container {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            padding: 20px;
+        }
+
+        /* Booking Form - Fixed at the Top */
+        .reservation-container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        /* Content Container: Hotels (Left) & Invoice (Right) */
+        .content-container {
+            display: flex;
+            flex-grow: 1;
+            gap: 20px;
+            overflow: hidden;
+        }
+
+        /* Hotels List (Scrollable) */
+        .hotels-section {
+            flex: 1;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+            overflow-y: auto;
+            max-height: calc(100vh - 120px); /* Prevents it from exceeding screen height */
+        }
+
+        /* Hotel Cards */
+        .hotel-card {
+            display: flex;
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 15px;
+            align-items: center;
+        }
+
+            .hotel-card img {
+                width: 100px;
+                height: 100px;
+                border-radius: 5px;
+                margin-right: 15px;
+            }
+
+        /* Invoice Section - Fixed */
+        .invoice-section {
+            flex: 1;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 120px; /* Align with the booking form */
+            height: fit-content;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="main-container">
+        <!-- Booking Form (Fixed at the Top) -->
+        <div class="reservation-container">
+            <form>
+                <div class="row g-2">
+                    <div class="col-md-3">
+                        <label class="fw-bold">Check-in Date</label>
+                        <input type="date" class="form-control">
+                    </div>
+                    <div class="col-md-3">
+                        <label class="fw-bold">Check-out Date</label>
+                        <input type="date" class="form-control">
+                    </div>
+                    <div class="col-md-2">
+                        <label class="fw-bold">Guests</label>
+                        <select class="form-select">
+                            <option>1</option>
+                            <option>2</option>
+                            <option>3+</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <label class="fw-bold">Room Type</label>
+                        <select class="form-select">
+                            <option>Standard</option>
+                            <option>Deluxe</option>
+                            <option>Suite</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2 d-flex align-items-end">
+                        <button type="submit" class="btn btn-warning w-100">Book Now</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <!-- Below: Side-by-Side Layout for Hotels & Invoice -->
+        <div class="content-container">
+            <!-- Left Side: Scrollable Hotels List -->
+            <div class="hotels-section">
+                <h3 class="mb-3">Available Hotels & Rooms</h3>
+
+                <div class="hotel-card">
+                    <img src="/img/hotel1.jpg" alt="Hotel Room">
+                    <div>
+                        <h5>Luxury Suite</h5>
+                        <p>₱3,500 per night - Up to 4 Guests</p>
+                    </div>
+                </div>
+
+                <div class="hotel-card">
+                    <img src="/img/hotel2.jpg" alt="Hotel Room">
+                    <div>
+                        <h5>Deluxe Room</h5>
+                        <p>₱2,800 per night - Up to 3 Guests</p>
+                    </div>
+                </div>
+
+                <div class="hotel-card">
+                    <img src="/img/hotel3.jpg" alt="Hotel Room">
+                    <div>
+                        <h5>Standard Room</h5>
+                        <p>₱2,000 per night - Up to 2 Guests</p>
+                    </div>
+                </div>
+
+                <!-- Duplicate hotel cards for scrolling demo -->
+                <div class="hotel-card">
+                    <img src="/img/hotel1.jpg" alt="Hotel Room">
+                    <div>
+                        <h5>Premium Suite</h5>
+                        <p>₱4,500 per night - Up to 5 Guests</p>
+                    </div>
+                </div>
+
+                <div class="hotel-card">
+                    <img src="/img/hotel2.jpg" alt="Hotel Room">
+                    <div>
+                        <h5>Business Room</h5>
+                        <p>₱3,000 per night - Up to 3 Guests</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Side: Fixed Invoice -->
+            <div class="invoice-section">
+                <h3 class="mb-3">Booking Invoice</h3>
+                <table class="table">
+                    <tbody>
+                        <tr>
+                            <td><strong>Room Type:</strong></td>
+                            <td>Deluxe Room</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Check-in:</strong></td>
+                            <td>March 20, 2024</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Check-out:</strong></td>
+                            <td>March 25, 2024</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Guests:</strong></td>
+                            <td>2</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Nights:</strong></td>
+                            <td>5</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Price per Night:</strong></td>
+                            <td>₱2,800</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Total Amount:</strong></td>
+                            <td>₱14,000</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Tax (12%):</strong></td>
+                            <td>₱1,680</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Grand Total:</strong></td>
+                            <td><strong>₱15,680</strong></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>

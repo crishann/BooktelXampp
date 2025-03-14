@@ -1,4 +1,4 @@
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using NewBooktel.Models;
 
@@ -20,28 +20,29 @@ namespace NewBooktel.Controllers
 
         public IActionResult Reservation()
         {
-            return View("UserDash/Reservation");
+            ViewData["ActivePage"] = "Reservation";
+            return View("UserDash/Reservation"); // ✅ Specify the correct folder
         }
 
-        //public IActionResult About()
-        //{
-        //    return View();
-        //}
 
         public IActionResult Contact()
         {
+            ViewData["ActivePage"] = "Contact";
             return View();
         }
 
         public IActionResult Register()
         {
+            ViewData["ActivePage"] = "Register";
             return View();
         }
 
         public IActionResult Login()
         {
+            ViewData["ActivePage"] = "Login";
             return View();
         }
+
 
 
 
