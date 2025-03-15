@@ -42,7 +42,7 @@ namespace NewBooktel.Controllers
         [HttpGet]
         public IActionResult Register()
         {
-            return View("~/Views/Home/Login.cshtml");
+            return View("~/Views/Home/Register.cshtml");
         }
 
         // 🔹 GET Login Page
