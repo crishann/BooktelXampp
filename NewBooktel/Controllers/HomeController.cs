@@ -43,6 +43,12 @@ namespace NewBooktel.Controllers
             return View();
         }
 
+        [HttpGet]
+        public IActionResult Profile()
+        {
+            return View("~/Views/UserDash/Profile.cshtml");
+        }
+
 
 
 

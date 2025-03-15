@@ -1,26 +1,21 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace NewBooktel.Models
 {
     public class User
     {
         public int Id { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public string ContactNumber { get; set; }
+        public string Email { get; set; }
+        public string Password { get; set; }
 
-        [Required]
-        public string FirstName { get; set; } = string.Empty;
+        //[NotMapped] // Prevents it from being stored in the DB
+        //public string ConfirmPassword { get; set; }
 
-        [Required]
-        public string LastName { get; set; } = string.Empty;
-
-        [Required, Phone]
-        public string ContactNumber { get; set; } = string.Empty;
-
-        [Required, EmailAddress]
-        public string Email { get; set; } = string.Empty;
-
-        [Required, MinLength(6)]
-        public string Password { get; set; } = string.Empty;
-
-        public string Role { get; set; } = "Guest"; // ✅ Default Role
+        public string Role { get; set; }
     }
+
 }
