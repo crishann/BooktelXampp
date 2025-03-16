@@ -26,7 +26,7 @@ public class UserDashController : Controller
     [HttpGet]
     public async Task<IActionResult> Profile()
     {
-        string userEmail = HttpContext.Session.GetString("UserEmail");
+        string? userEmail = HttpContext.Session.GetString("UserEmail"); // Allow null
         if (string.IsNullOrEmpty(userEmail))
         {
             return RedirectToAction("Login", "Home");

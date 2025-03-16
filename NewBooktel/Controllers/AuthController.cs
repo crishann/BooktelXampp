@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using NewBooktel.Data;
 using NewBooktel.Models;
+using NewBooktel.Services;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using BCrypt.Net; // ✅ Import BCrypt for password hashing
@@ -12,10 +14,13 @@ namespace NewBooktel.Controllers
     public class AuthController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly IEmailSender _emailSender; // ✅ Properly initialized
 
-        public AuthController(ApplicationDbContext context)
+        // ✅ Constructor: Initializes both _context and _emailSender
+        public AuthController(ApplicationDbContext context, IEmailSender emailSender)
         {
-            _context = context;
+            _context = context ?? throw new ArgumentNullException(nameof(context));
+            _emailSender = emailSender ?? throw new ArgumentNullException(nameof(emailSender));
         }
 
         // ✅ GET: Register Page
@@ -46,7 +51,7 @@ namespace NewBooktel.Controllers
         {
             Console.WriteLine("📌 Registering User...");
 
-            // ✅ Check if the email already exists
+            // ✅ Check if email already exists
             if (await _context.Users.AnyAsync(u => u.Email == Email))
             {
                 Console.WriteLine("❌ Email already registered.");
@@ -54,7 +59,7 @@ namespace NewBooktel.Controllers
                 return View("~/Views/Home/Register.cshtml");
             }
 
-            // ✅ Hash the password before storing
+            // ✅ Hash password before storing
             string hashedPassword = HashPassword(Password);
 
             var newUser = new User
@@ -63,15 +68,25 @@ namespace NewBooktel.Controllers
                 LastName = LastName,
                 ContactNumber = ContactNumber,
                 Email = Email,
-                Password = hashedPassword, // ✅ Store hashed password
-                Role = "Guest"
+                Password = hashedPassword,
+                Role = "Guest",
+                IsEmailConfirmed = false // ✅ Ensure database has this column
             };
 
             _context.Users.Add(newUser);
             await _context.SaveChangesAsync();
 
-            Console.WriteLine("✅ User Registered Successfully!");
-            return RedirectToAction("Login", "Home"); // ✅ Redirect to login page
+            // ✅ Generate confirmation link
+            var token = Guid.NewGuid().ToString(); // Simulated token (consider using Identity)
+            var confirmationLink = Url.Action("ConfirmEmail", "Auth",
+                new { email = newUser.Email, token = token }, Request.Scheme);
+
+            // ✅ Send confirmation email
+            await _emailSender.SendEmailAsync(newUser.Email, "Confirm Your Email",
+                $"Please confirm your account by <a href='{confirmationLink}'>clicking here</a>.");
+
+            Console.WriteLine("✅ Confirmation email sent!");
+            return RedirectToAction("Login", "Home");
         }
 
         // ✅ POST: Login User (Secure)
@@ -79,61 +94,41 @@ namespace NewBooktel.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(string Email, string Password)
         {
-            Console.WriteLine($"📌 Attempting login for {Email}");
-
             var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == Email);
             if (user == null)
             {
-                Console.WriteLine("❌ Invalid login: User not found.");
-                //ViewBag.ErrorMessage = "Invalid email or password.";
-                return View("~/Views/Home/Login.cshtml");
-            }
-
-            // ✅ Check if the stored password is a valid bcrypt hash
-            if (!user.Password.StartsWith("$2a$") && !user.Password.StartsWith("$2b$"))
-            {
-                Console.WriteLine("⚠️ Warning: Password is stored in plaintext. Hashing it now.");
-
-                // ✅ Hash the password and update the database
-                string hashedPassword = BCrypt.Net.BCrypt.HashPassword(user.Password);
-                user.Password = hashedPassword;
-                await _context.SaveChangesAsync();
-            }
-
-            // ✅ Now safely verify the password
-            bool isPasswordValid = BCrypt.Net.BCrypt.Verify(Password, user.Password);
-            if (!isPasswordValid)
-            {
-                Console.WriteLine("❌ Invalid login: Incorrect password.");
                 ViewBag.ErrorMessage = "Invalid email or password.";
                 return View("~/Views/Home/Login.cshtml");
             }
 
-            // ✅ Store user session
+            if (!user.IsEmailConfirmed)
+            {
+                ViewBag.ErrorMessage = "Please verify your email before logging in.";
+                return View("~/Views/Home/Login.cshtml");
+            }
+
+            // ✅ Validate password
+            bool isPasswordValid = BCrypt.Net.BCrypt.Verify(Password, user.Password);
+            if (!isPasswordValid)
+            {
+                ViewBag.ErrorMessage = "Invalid email or password.";
+                return View("~/Views/Home/Login.cshtml");
+            }
+
+            // ✅ Store session
             HttpContext.Session.SetString("UserFirstName", user.FirstName);
             HttpContext.Session.SetString("UserEmail", user.Email);
             HttpContext.Session.SetString("UserRole", user.Role);
 
-            Console.WriteLine($"✅ Login successful! Welcome, {user.FirstName} ({user.Role})");
-
-            return user.Role == "Admin"
-                ? RedirectToAction("AdminIndex", "Admin")
-                : RedirectToAction("Reservation", "UserDash");
+            return RedirectToAction("Reservation", "UserDash");
         }
 
         // ✅ GET: Logout User
         [HttpGet]
         public IActionResult Logout()
         {
-            // ✅ Clear specific session keys
-            HttpContext.Session.Remove("UserFirstName");
-            HttpContext.Session.Remove("UserEmail");
-            HttpContext.Session.Remove("UserRole");
-
-            // ✅ Clear all session data
+            // ✅ Clear session data
             HttpContext.Session.Clear();
-
-            // ✅ Ensure session cookie is deleted
             Response.Cookies.Delete(".AspNetCore.Session");
 
             Console.WriteLine("✅ User logged out. Session cleared!");
@@ -144,6 +139,33 @@ namespace NewBooktel.Controllers
         private string HashPassword(string password)
         {
             return BCrypt.Net.BCrypt.HashPassword(password);
+        }
+
+        // ✅ GET: Confirm Email
+        [HttpGet]
+        public async Task<IActionResult> ConfirmEmail(string email, string token)
+        {
+            Console.WriteLine($"📌 Confirming email for {email}");
+
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+            if (user == null)
+            {
+                Console.WriteLine("❌ User not found.");
+                return NotFound("User not found.");
+            }
+
+            if (string.IsNullOrEmpty(token))
+            {
+                Console.WriteLine("❌ Invalid confirmation token.");
+                return BadRequest("Invalid confirmation request.");
+            }
+
+            // ✅ Mark email as confirmed
+            user.IsEmailConfirmed = true;
+            await _context.SaveChangesAsync();
+
+            Console.WriteLine("✅ Email confirmed successfully!");
+            return View("EmailConfirmed");
         }
     }
 }

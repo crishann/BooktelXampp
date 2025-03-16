@@ -1,7 +1,13 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using NewBooktel.Data;
+using NewBooktel.Services;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// ✅ Email Auth
+
+builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
+builder.Services.AddTransient<IEmailSender, EmailSender>();
 
 // ✅ Fix Database Connection
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
