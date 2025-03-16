@@ -39,6 +39,12 @@
     </style>
 </head>
 <body>
+    @{
+        // ✅ Fix: Prevent null errors by using "?.ToString() ?? "" "
+        var currentController = ViewContext.RouteData.Values["Controller"]?.ToString() ?? "";
+        var currentAction = ViewContext.RouteData.Values["Action"]?.ToString() ?? "";
+    }
+
     <header>
         <!-- Navbar -->
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark-blue">
@@ -50,19 +56,21 @@
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav ms-auto">
                         <li class="nav-item">
-                            <a class="nav-link @(ViewContext.RouteData.Values["Controller"].ToString() == "UserDash" && ViewContext.RouteData.Values["Action"].ToString() == "Reservation" ? "active" : "")"
+                            <a class="nav-link @(currentController == "UserDash" && currentAction == "Reservation" ? "active" : "")"
                                asp-controller="UserDash" asp-action="Reservation">Reservation</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link @(ViewContext.RouteData.Values["Controller"].ToString() == "Home" && ViewContext.RouteData.Values["Action"].ToString() == "Contact" ? "active" : "")"
+                            <a class="nav-link @(currentController == "Home" && currentAction == "Contact" ? "active" : "")"
                                asp-controller="Home" asp-action="Contact">Contact us</a>
                         </li>
 
                         @if (!string.IsNullOrEmpty(Context.Session.GetString("UserFirstName")))
                         {
                             <li class="nav-item">
-                                <a class="nav-link @(ViewContext.RouteData.Values["Controller"].ToString() == "UserDash" && ViewContext.RouteData.Values["Action"].ToString() == "Profile" ? "active" : "")"
-                                   asp-controller="UserDash" asp-action="Profile"> @Context.Session.GetString("UserFirstName")</a>
+                                <a class="nav-link @(currentController == "UserDash" && currentAction == "Profile" ? "active" : "")"
+                                   asp-controller="UserDash" asp-action="Profile">
+                                    @Context.Session.GetString("UserFirstName")
+                                </a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link text-danger" asp-controller="Auth" asp-action="Logout">Logout</a>
@@ -71,11 +79,11 @@
                         else
                         {
                             <li class="nav-item">
-                                <a class="nav-link @(ViewContext.RouteData.Values["Controller"].ToString() == "Auth" && ViewContext.RouteData.Values["Action"].ToString() == "Register" ? "active" : "")"
+                                <a class="nav-link @(currentController == "Auth" && currentAction == "Register" ? "active" : "")"
                                    asp-controller="Auth" asp-action="Register">Register</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link @(ViewContext.RouteData.Values["Controller"].ToString() == "Auth" && ViewContext.RouteData.Values["Action"].ToString() == "Login" ? "active" : "")"
+                                <a class="nav-link @(currentController == "Auth" && currentAction == "Login" ? "active" : "")"
                                    asp-controller="Auth" asp-action="Login">Log in</a>
                             </li>
                         }
@@ -83,7 +91,6 @@
                 </div>
             </div>
         </nav>
-
     </header>
 
     @RenderBody()
@@ -100,6 +107,5 @@
             <p>Copyright ©2025 All rights reserved | Booktel Co.</p>
         </div>
     </footer>
-
 </body>
 </html>

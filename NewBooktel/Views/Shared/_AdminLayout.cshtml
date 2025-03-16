@@ -55,29 +55,33 @@
 </head>
 <body>
 
+    @{
+        var currentAction = ViewContext.RouteData.Values["Action"]?.ToString() ?? "";
+    }
+
     <!-- Sidebar -->
     <div class="sidebar">
         <div>
             <h3>Admin Panel</h3>
             <ul class="nav flex-column">
                 <li class="nav-item">
-                    <a class="nav-link text-white @(ViewContext.RouteData.Values["Action"].ToString() == "AdminIndex" ? "active" : "")"
+                    <a class="nav-link text-white @(currentAction == "AdminIndex" ? "active" : "")"
                        asp-controller="Admin" asp-action="AdminIndex">Dashboard</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-white @(ViewContext.RouteData.Values["Action"].ToString() == "BookingReq" ? "active" : "")"
+                    <a class="nav-link text-white @(currentAction == "BookingReq" ? "active" : "")"
                        asp-controller="Admin" asp-action="BookingReq">Bookings</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-white @(ViewContext.RouteData.Values["Action"].ToString() == "Rooms" ? "active" : "")"
+                    <a class="nav-link text-white @(currentAction == "Rooms" ? "active" : "")"
                        asp-controller="Admin" asp-action="Rooms">Rooms</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-white @(ViewContext.RouteData.Values["Action"].ToString() == "Payment" ? "active" : "")"
+                    <a class="nav-link text-white @(currentAction == "Payment" ? "active" : "")"
                        asp-controller="Admin" asp-action="Payment">Payments</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-white @(ViewContext.RouteData.Values["Action"].ToString() == "Housekeeping" ? "active" : "")"
+                    <a class="nav-link text-white @(currentAction == "Housekeeping" ? "active" : "")"
                        asp-controller="Admin" asp-action="Housekeeping">Housekeeping</a>
                 </li>
             </ul>

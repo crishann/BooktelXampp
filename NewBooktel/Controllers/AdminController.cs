@@ -5,7 +5,9 @@ public class AdminController : Controller
     // ✅ Restrict Access to Admins Only
     private bool IsAdmin()
     {
-        return HttpContext.Session.GetString("UserRole") == "Admin";
+        var role = HttpContext.Session.GetString("UserRole") ?? "unknown";
+        Console.WriteLine($"📌 DEBUG: Retrieved Session Role = '{role}'"); // ✅ Debugging output
+        return role == "admin"; // Ensure lowercase comparison
     }
 
     public IActionResult AdminIndex()

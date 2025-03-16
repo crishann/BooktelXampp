@@ -1,4 +1,6 @@
-﻿@{
+﻿@model List<NewBooktel.Models.Room>
+
+@{
     ViewData["Title"] = "Booktel";
 }
 
@@ -8,6 +10,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BookTel - Hotel Reservation</title>
+
+    <link href="Views\Shared\_Layout.cshtml.css" rel="stylesheet" />
 
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -144,11 +148,15 @@
             margin-bottom: 40px; /* Adjust this value for more/less spacing */
         }
 
+        .tax-info {
+            font-size: 12px;
+            color: red;
+            font-weight: bold;
+        }
+
     </style>
 </head>
 <body>
-	<link href="c:\users\pc\source\repos\booktelxampp1\newbooktel\views\shared\_layout.cshtml.css" rel="stylesheet" />
-	<a href="c:\users\pc\source\repos\booktelxampp1\newbooktel\views\shared\_layout.cshtml">c:\users\pc\source\repos\booktelxampp1\newbooktel\views\shared\_layout.cshtml</a>
 
     <!-- Hero Section -->
     <div class="hero-section">
@@ -199,44 +207,30 @@
     <div class="container mt-5">
         <h2 class="text-center fw-bold">Room Types</h2>
         <div class="row mt-4">
-            <div class="col-md-3">
-                <div class="room-card">
-                    <img src="/img/room1.svg" alt="Double Deluxe Room">
-                    <h5>Double Deluxe Room</h5>
-                    <p>₱2,628 - ₱3,788/night</p>
-                    <button class="book-btn">BOOK NOW</button>
+
+            @foreach (var room in Model)
+            {
+                <div class="col-md-3">
+                    <div class="room-card">
+                        <img src="@room.ImageUrl" alt="@room.Name">
+                        <h5>@room.Name</h5>
+                        <p>
+                            ₱@room.Price 1 night
+                            <br>
+                            <span class="tax-info">+₱500 taxes and fees included.</span>
+                        </p>
+                        <button class="book-btn">BOOK NOW</button>
+                    </div>
                 </div>
-            </div>
-            <div class="col-md-3">
-                <div class="room-card">
-                    <img src="/img/room2.svg" alt="Presidential Suite">
-                    <h5>Presidential Suite</h5>
-                    <p>Php 600,000/night</p>
-                    <button class="book-btn">BOOK NOW</button>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="room-card">
-                    <img src="/img/room3.svg" alt="Standard Room">
-                    <h5>Standard Room</h5>
-                    <p>₱1,482 - ₱3,788/night</p>
-                    <button class="book-btn">BOOK NOW</button>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="room-card">
-                    <img src="/img/room4.svg" alt="Double Room">
-                    <h5>Double Room</h5>
-                    <p>₱6,927/night</p>
-                    <button class="book-btn">BOOK NOW</button>
-                </div>
-            </div>
+            }
+
         </div>
     </div>
 
-    <!-- Services Section -->
+
+    <!-- Facilities Section -->
     <div class="container services-section text-center">
-        <h2 class="fw-bold">Services</h2>
+        <h2 class="fw-bold">Facilities</h2>
         <div class="row justify-content-center mt-3">
             <div class="col-md-3">
                 <div class="service-box">
@@ -256,6 +250,42 @@
             <div class="col-md-3">
                 <div class="service-box">
                     <i class="fas fa-glass-martini"></i> Bar
+                </div>
+            </div>
+        </div>
+
+        <div class="row justify-content-center mt-3">
+            <div class="col-md-3">
+                <div class="service-box">
+                    <i class="fas fa-spa"></i> Spa & Wellness Center
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="service-box">
+                    <i class="fas fa-wifi"></i> Free Wi-Fi
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="service-box">
+                    <i class="fas fa-car"></i> Free Parking
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="service-box">
+                    <i class="fas fa-user-shield"></i> Security 24/7
+                </div>
+            </div>
+        </div>
+
+        <div class="row justify-content-center mt-3">
+            <div class="col-md-3">
+                <div class="service-box">
+                    <i class="fas fa-shuttle-van"></i> Airport Shuttle
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="service-box">
+                    <i class="fas fa-water"></i> Infinity Pool
                 </div>
             </div>
         </div>

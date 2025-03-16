@@ -1,29 +1,35 @@
 ﻿using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using NewBooktel.Models;
+using NewBooktel.Services;
+using System.Threading.Tasks;
+using System.Collections.Generic;
 
 namespace NewBooktel.Controllers
 {
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly RoomService _roomService; // ✅ Inject RoomService
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, RoomService roomService)
         {
             _logger = logger;
+            _roomService = roomService;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            var rooms = await _roomService.GetAllRoomsAsync(); // ✅ Fetch rooms from database
+            return View(rooms); // ✅ Pass rooms to the View
         }
 
         public IActionResult Reservation()
         {
             ViewData["ActivePage"] = "Reservation";
-            return View("UserDash/Reservation"); // ✅ Specify the correct folder
+            return View("UserDash/Reservation");
         }
-
 
         public IActionResult Contact()
         {
@@ -48,9 +54,6 @@ namespace NewBooktel.Controllers
         {
             return View("~/Views/UserDash/Profile.cshtml");
         }
-
-
-
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()

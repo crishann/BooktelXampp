@@ -120,13 +120,31 @@ namespace NewBooktel.Controllers
                 return View("~/Views/Home/Login.cshtml");
             }
 
-            // ✅ Store session
+            // ✅ Debugging output: Print the retrieved role from DB
+            Console.WriteLine($"📌 DEBUG: Retrieved Role from DB = '{user.Role}'");
+
+            // ✅ Store session (Ensure lowercase for comparison)
             HttpContext.Session.SetString("UserFirstName", user.FirstName);
             HttpContext.Session.SetString("UserEmail", user.Email);
-            HttpContext.Session.SetString("UserRole", user.Role);
+            HttpContext.Session.SetString("UserRole", user.Role.Trim().ToLower()); // Normalize Role
 
-            return RedirectToAction("Reservation", "UserDash");
+            // ✅ Debugging: Print stored session role
+            Console.WriteLine($"📌 DEBUG: Stored Session Role = '{HttpContext.Session.GetString("UserRole")}'");
+
+            // ✅ Redirect Based on Role
+            if (user.Role.Trim().ToLower() == "admin")
+            {
+                Console.WriteLine("✅ Redirecting to Admin Dashboard...");
+                return RedirectToAction("AdminIndex", "Admin"); // ✅ Redirect Admin to Admin Dashboard
+            }
+            else
+            {
+                Console.WriteLine("✅ Redirecting to User Dashboard...");
+                return RedirectToAction("Reservation", "UserDash"); // ✅ Redirect Regular Users
+            }
         }
+
+
 
         // ✅ GET: Logout User
         [HttpGet]

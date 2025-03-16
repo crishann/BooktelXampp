@@ -5,7 +5,6 @@ using NewBooktel.Services;
 var builder = WebApplication.CreateBuilder(args);
 
 // ✅ Email Auth
-
 builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
 builder.Services.AddTransient<IEmailSender, EmailSender>();
 
@@ -16,6 +15,9 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
         new MySqlServerVersion(new Version(8, 0, 23)),
         mySqlOptions => mySqlOptions.EnableRetryOnFailure()
     ));
+
+// ✅ Register RoomService
+builder.Services.AddScoped<RoomService>();
 
 // ✅ Enable Sessions (for login authentication)
 builder.Services.AddSession(options =>
@@ -36,9 +38,7 @@ builder.Services.AddAntiforgery(options =>
 // ✅ Add MVC Controllers & Views
 builder.Services.AddControllersWithViews();
 
-
-
-var app = builder.Build(); // ⚠️ DO NOT ADD SERVICES AFTER THIS LINE!
+var app = builder.Build(); // 🚨 NO service registrations after this line!
 
 if (!app.Environment.IsDevelopment())
 {
@@ -50,11 +50,8 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
 
-
-
 // ✅ Enable Sessions before Authorization
 app.UseSession();
-
 app.UseAuthorization();
 
 app.MapControllerRoute(

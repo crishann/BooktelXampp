@@ -46,7 +46,7 @@ public class UserDashController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Profile([FromForm] string Email, [FromForm] string NewPassword)
     {
-        string userEmail = HttpContext.Session.GetString("UserEmail");
+        string? userEmail = HttpContext.Session.GetString("UserEmail");
 
         if (string.IsNullOrEmpty(userEmail))
         {
