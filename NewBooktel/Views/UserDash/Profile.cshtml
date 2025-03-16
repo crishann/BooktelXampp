@@ -1,4 +1,5 @@
-﻿@{
+﻿@model NewBooktel.Models.User
+@{
     ViewData["Title"] = "Profile";
 }
 
@@ -7,13 +8,203 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BookTel - Hotel Reservation</title>
+    <title>Profile - BookTel</title>
 
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
-   </head>
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        .profile-section {
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: url('/img/profile-bg.jpg') no-repeat center center;
+            background-size: cover;
+            padding: 40px;
+            color: black;
+        }
+
+        .profile-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 80%;
+            max-width: 1000px;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .profile-info {
+            flex: 1;
+            padding-left: 40px;
+            border-left: 4px solid #06183B;
+            font-size: 1.1rem;
+        }
+
+            .profile-info h4 {
+                font-size: 1.8rem;
+                font-weight: bold;
+            }
+
+            .profile-info p {
+                margin-bottom: 10px;
+            }
+
+        .edit-profile {
+            flex: 1;
+            padding-right: 20px;
+            color: black;
+        }
+
+        .form-floating label {
+            color: #666;
+        }
+
+        .form-control {
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+
+        .btn-custom {
+            background-color: #06183B;
+            color: white;
+            padding: 12px;
+            font-size: 1.2rem;
+            border-radius: 8px;
+            transition: background 0.3s ease;
+            width: 100%;
+        }
+
+            .btn-custom:hover {
+                background-color: #F4A600;
+                color: white;
+            }
+    </style>
+</head>
 <body>
-    <h1>profile</h1>
+
+    <!-- Profile Section -->
+    <section class="profile-section">
+        <div class="profile-container">
+            <!-- Profile Details on Left -->
+            <div class="profile-info text-start" id="profileDetails">
+                <h4 class="fw-bold mb-3">Your Profile</h4>
+                <p><i class="fas fa-user text-warning me-2"></i> <span id="fullName">@Model.FirstName @Model.LastName</span></p>
+                <p><i class="fas fa-envelope text-warning me-2"></i> <span id="email">@Model.Email</span></p>
+                <p><i class="fas fa-phone text-warning me-2"></i> <span id="contact">@Model.ContactNumber</span></p>
+                <button class="btn btn-custom mt-3" onclick="toggleEdit(true)">Edit Profile</button>
+            </div>
+
+            <!-- Edit Form on Right -->
+            <form class="edit-profile w-50" id="editForm" style="display: none;">
+                @Html.AntiForgeryToken()
+                <h4 class="fw-bold mb-3">Edit Profile</h4>
+                <div class="form-floating mb-3">
+                    <input type="text" class="form-control" id="contactNumber" value="@Model.ContactNumber">
+                    <label for="contactNumber">Contact Number</label>
+                </div>
+                <div class="form-floating mb-3">
+                    <input type="email" class="form-control" id="emailAddress" value="@Model.Email">
+                    <label for="emailAddress">Email Address</label>
+                </div>
+                <div class="form-floating mb-3">
+                    <input type="password" class="form-control" id="password">
+                    <label for="password">New Password</label>
+                </div>
+                <div class="form-floating mb-3">
+                    <input type="password" class="form-control" id="confirmPassword">
+                    <label for="confirmPassword">Confirm Password</label>
+                </div>
+                <button type="button" class="btn btn-custom mb-2" onclick="saveChanges()">Save Changes</button>
+                <button type="button" class="btn btn-secondary w-100" onclick="toggleEdit(false)">Cancel</button>
+            </form>
+        </div>
+    </section>
+
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        function toggleEdit(showForm) {
+            document.getElementById("profileDetails").style.display = showForm ? "none" : "block";
+            document.getElementById("editForm").style.display = showForm ? "block" : "none";
+        }
+
+
+
+
+                function saveChanges() {
+            let contactInput = document.getElementById("contactNumber");
+            let emailInput = document.getElementById("emailAddress");
+            let passwordInput = document.getElementById("password");
+            let confirmPasswordInput = document.getElementById("confirmPassword");
+
+            if (!contactInput || !emailInput || !passwordInput || !confirmPasswordInput) {
+                console.error("One or more input fields are missing!");
+                return;
+            }
+
+            let newEmail = emailInput.value;
+            let newPassword = passwordInput.value;
+            let confirmPassword = confirmPasswordInput.value;
+
+            if (newPassword && newPassword !== confirmPassword) {
+                alert("Passwords do not match!");
+                return;
+            }
+
+            let formData = new URLSearchParams(); // ✅ Fix: Use URLSearchParams instead of FormData
+            formData.append("Email", newEmail);
+            formData.append("NewPassword", newPassword);
+
+            let token = document.querySelector('input[name="__RequestVerificationToken"]')?.value || "";
+            if (!token) {
+                console.error("CSRF token is missing!");
+                return;
+            }
+
+            console.log("🚀 Sending update request...");
+
+            fetch('/UserDash/Profile', { // ✅ Ensure this matches the correct route
+                method: "POST",
+                body: formData,
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded", // ✅ Fix: Correct content type
+                    "RequestVerificationToken": token
+                }
+            })
+            .then(response => {
+                console.log("🔍 Server Response:", response);
+                if (!response.ok) {
+                    throw new Error("Server returned an error: " + response.status);
+                }
+                return response.json(); // ✅ Fix: Prevent JSON parsing error
+            })
+            .then(data => {
+                console.log("✅ Response received:", data);
+                alert(data.message);
+                if (data.success) {
+                    document.getElementById("email").textContent = newEmail;
+                    toggleEdit(false);
+                }
+            })
+            .catch(error => console.error("❌ Error:", error));
+        }
+
+
+    </script>
+
 </body>
 </html>

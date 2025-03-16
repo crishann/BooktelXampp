@@ -1,11 +1,4 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-    
-*@
-@{
-    ViewData["Title"] = "Login";
-}
-@{
+﻿@{
     ViewData["Title"] = "Login";
 }
 
@@ -17,6 +10,7 @@
     <title>BookTel - Login</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="~/lib/fontawesome/css/all.min.css" />
 
     <style>
         html, body {
@@ -40,6 +34,7 @@
             background: white;
             border-radius: 10px;
             box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+            position: relative;
         }
 
             .login-card h3 {
@@ -76,6 +71,24 @@
                 .forgot-password a:hover {
                     text-decoration: underline;
                 }
+
+        /* 🔹 Style for the eye icon */
+        .password-wrapper {
+            position: relative;
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: #6c757d;
+        }
+
+            .toggle-password:hover {
+                color: black;
+            }
     </style>
 </head>
 <body>
@@ -84,24 +97,32 @@
         <div class="login-card">
             <h3>Login</h3>
 
-            <!-- Show error messages if login fails -->
-            @if (!string.IsNullOrEmpty(ViewBag.ErrorMessage))
-            {
-                <div class="alert alert-danger">@ViewBag.ErrorMessage</div>
-            }
+            @* <!-- Show error messages if login fails --> *@
+            @* @if (!string.IsNullOrEmpty(ViewBag.ErrorMessage)) *@
+            @* { *@
+            @*     <div class="alert alert-danger">@Html.Raw(ViewBag.ErrorMessage)</div> *@
+            @* } *@
 
             <form asp-controller="Auth" asp-action="Login" method="post">
                 @Html.AntiForgeryToken()
+                @if (!string.IsNullOrEmpty(ViewBag.ErrorMessage))
+                {
+                    <div class="alert alert-danger">
+                        @Html.Raw(ViewBag.ErrorMessage)
+                    </div>
+                }
 
                 <div class="form-floating mb-3">
                     <input name="Email" type="email" class="form-control" placeholder="Enter your email" required>
                     <label>Email</label>
                 </div>
 
-                <div class="form-floating mb-3">
-                    <input name="Password" type="password" class="form-control" placeholder="Enter your password" required>
+                <div class="form-floating mb-3 password-wrapper">
+                    <input id="password" name="Password" type="password" class="form-control" placeholder="Enter your password" required>
                     <label>Password</label>
+                    <i class="fa-solid fa-eye toggle-password" onclick="togglePassword()"></i>
                 </div>
+
 
                 <button type="submit" class="btn btn-custom">Login</button>
 
@@ -114,5 +135,24 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
+    
+    <script>
+        function togglePassword() {
+            var passwordField = document.getElementById("password");
+            var icon = document.querySelector(".toggle-password");
+
+            if (passwordField.type === "password") {
+                passwordField.type = "text";
+                icon.classList.remove("fa-eye");
+                icon.classList.add("fa-eye-slash");
+            } else {
+                passwordField.type = "password";
+                icon.classList.remove("fa-eye-slash");
+                icon.classList.add("fa-eye");
+            }
+        }
+    </script>
+
+    
 </body>
 </html>

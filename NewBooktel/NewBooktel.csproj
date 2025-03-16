@@ -9,6 +9,7 @@
   <ItemGroup>
     <Folder Include="Views\Auth\" />
     <Folder Include="Views\HkDash\" />
+    <Folder Include="wwwroot\img\hotels\" />
   </ItemGroup>
 
   <ItemGroup>

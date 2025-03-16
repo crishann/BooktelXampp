@@ -30,6 +30,8 @@ builder.Services.AddAntiforgery(options =>
 // ✅ Add MVC Controllers & Views
 builder.Services.AddControllersWithViews();
 
+
+
 var app = builder.Build(); // ⚠️ DO NOT ADD SERVICES AFTER THIS LINE!
 
 if (!app.Environment.IsDevelopment())
@@ -41,6 +43,8 @@ if (!app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
+
+
 
 // ✅ Enable Sessions before Authorization
 app.UseSession();

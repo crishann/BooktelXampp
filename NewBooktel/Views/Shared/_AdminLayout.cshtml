@@ -31,7 +31,7 @@
         }
 
         .logout-btn {
-            background: #dc3545; /* Bootstrap danger (red) color */
+            background: #dc3545;
             color: white;
             border: none;
             width: 100%;
@@ -46,6 +46,11 @@
                 background: #c82333;
                 color: white;
             }
+
+        /* ✅ Change text color to yellow for active sidebar links */
+        .nav-link.active {
+            color: #ffc107 !important;
+        }
     </style>
 </head>
 <body>
@@ -55,11 +60,26 @@
         <div>
             <h3>Admin Panel</h3>
             <ul class="nav flex-column">
-                <li class="nav-item"><a class="nav-link text-white" asp-controller="Admin" asp-action="AdminIndex">Dashboard</a></li>
-                <li class="nav-item"><a class="nav-link text-white" asp-controller="Admin" asp-action="BookingReq">Bookings</a></li>
-                <li class="nav-item"><a class="nav-link text-white" asp-controller="Admin" asp-action="Rooms">Rooms</a></li>
-                <li class="nav-item"><a class="nav-link text-white" asp-controller="Admin" asp-action="Payment">Payments</a></li>
-                <li class="nav-item"><a class="nav-link text-white" asp-controller="Admin" asp-action="Housekeeping">Housekeeping</a></li>
+                <li class="nav-item">
+                    <a class="nav-link text-white @(ViewContext.RouteData.Values["Action"].ToString() == "AdminIndex" ? "active" : "")"
+                       asp-controller="Admin" asp-action="AdminIndex">Dashboard</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white @(ViewContext.RouteData.Values["Action"].ToString() == "BookingReq" ? "active" : "")"
+                       asp-controller="Admin" asp-action="BookingReq">Bookings</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white @(ViewContext.RouteData.Values["Action"].ToString() == "Rooms" ? "active" : "")"
+                       asp-controller="Admin" asp-action="Rooms">Rooms</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white @(ViewContext.RouteData.Values["Action"].ToString() == "Payment" ? "active" : "")"
+                       asp-controller="Admin" asp-action="Payment">Payments</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white @(ViewContext.RouteData.Values["Action"].ToString() == "Housekeeping" ? "active" : "")"
+                       asp-controller="Admin" asp-action="Housekeeping">Housekeeping</a>
+                </li>
             </ul>
         </div>
 

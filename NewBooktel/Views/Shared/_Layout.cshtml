@@ -7,6 +7,13 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/NewBooktel.styles.css" asp-append-version="true" />
+
+    <style>
+        /* ✅ Yellow highlight for active navbar items */
+        .navbar-nav .nav-link.active {
+            color: #ffc107 !important;
+        }
+    </style>
 </head>
 <body>
     <header>
@@ -20,17 +27,19 @@
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav ms-auto">
                         <li class="nav-item">
-                            <a class="nav-link text-white" asp-controller="UserDash" asp-action="Reservation">Reservation</a>
+                            <a class="nav-link @(ViewContext.RouteData.Values["Controller"].ToString() == "UserDash" && ViewContext.RouteData.Values["Action"].ToString() == "Reservation" ? "active" : "")"
+                               asp-controller="UserDash" asp-action="Reservation">Reservation</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-white" asp-controller="Home" asp-action="Contact">Contact us</a>
+                            <a class="nav-link @(ViewContext.RouteData.Values["Controller"].ToString() == "Home" && ViewContext.RouteData.Values["Action"].ToString() == "Contact" ? "active" : "")"
+                               asp-controller="Home" asp-action="Contact">Contact us</a>
                         </li>
 
                         @if (!string.IsNullOrEmpty(Context.Session.GetString("UserFirstName")))
                         {
-                            <!-- ✅ Show logged-in user's first name -->
                             <li class="nav-item">
-                                <a class="nav-link text-white" href="#">👤 @Context.Session.GetString("UserFirstName")</a>
+                                <a class="nav-link @(ViewContext.RouteData.Values["Controller"].ToString() == "UserDash" && ViewContext.RouteData.Values["Action"].ToString() == "Profile" ? "active" : "")"
+                                   asp-controller="UserDash" asp-action="Profile"> @Context.Session.GetString("UserFirstName")</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link text-danger" asp-controller="Auth" asp-action="Logout">Logout</a>
@@ -38,20 +47,20 @@
                         }
                         else
                         {
-                            <!-- ❌ Show "Register" & "Login" if user is NOT logged in -->
                             <li class="nav-item">
-                                <a class="nav-link text-white" asp-controller="Auth" asp-action="Register">Register</a>
+                                <a class="nav-link @(ViewContext.RouteData.Values["Controller"].ToString() == "Auth" && ViewContext.RouteData.Values["Action"].ToString() == "Register" ? "active" : "")"
+                                   asp-controller="Auth" asp-action="Register">Register</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-white" asp-controller="Auth" asp-action="Login">Log in</a>
+                                <a class="nav-link @(ViewContext.RouteData.Values["Controller"].ToString() == "Auth" && ViewContext.RouteData.Values["Action"].ToString() == "Login" ? "active" : "")"
+                                   asp-controller="Auth" asp-action="Login">Log in</a>
                             </li>
                         }
-
-
                     </ul>
                 </div>
             </div>
         </nav>
+
     </header>
 
     @RenderBody()
