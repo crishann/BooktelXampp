@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3307
--- Generation Time: Mar 15, 2025 at 07:37 PM
+-- Generation Time: Mar 16, 2025 at 09:55 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -42,10 +42,11 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`Id`, `FirstName`, `LastName`, `ContactNumber`, `Email`, `Password`, `Role`) VALUES
-(1, 'Admin', 'Admin', '09123456789', 'admin@gmail.com', 'admin', 'Admin'),
 (2, 'John', 'Doe', '09123456789', 'johndoe@example.com', 'password123', 'Guest'),
-(3, 'cristian', 'torrejos', '09232368502', 'cristian@gmail.com', '123', 'Guest'),
-(4, 'Xing', 'Xiang', '09123456789', 'Xing@gmail.com', 'Xing@2003', 'Guest');
+(3, 'cristian', 'torrejos', '09232368502', 'cristian@gmail.com', '$2a$11$D5bZefZFg/x2DQQDwbrHAudeoTWs08wO/n4j6/PJ.5NX91ztuFgPe', 'Guest'),
+(4, 'Xing', 'Xiang', '09123456789', 'Xing@gmail.com', 'Xing@2003', 'Guest'),
+(5, 'test1', 'er', '09123456789', 'test1@gmail.com', 'test1@gmail.com', 'Guest'),
+(6, 'Admin', 'Admin', '09123456789', 'admin@gmail.com', '$2a$11$tP16VxV8DRKSZgLVHLKoU.sVQ80j3OQOp5inY/QTOjNY1j9sUSDWS', 'Admin');
 
 -- --------------------------------------------------------
 
@@ -92,7 +93,7 @@ ALTER TABLE `__efmigrationshistory`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
