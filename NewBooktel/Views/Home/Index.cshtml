@@ -2,8 +2,6 @@
     ViewData["Title"] = "Booktel";
 }
 
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -13,6 +11,7 @@
 
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 
     <style>
         /* Prevent horizontal scrolling */
@@ -30,7 +29,7 @@
             background: url('/img/bg.svg') no-repeat center center;
             background-size: cover;
             display: flex;
-            align-items: flex-end; /* Align content to the bottom */
+            align-items: flex-end;
             justify-content: center;
             position: relative;
             text-align: center;
@@ -47,54 +46,119 @@
             background: rgba(0, 0, 0, 0.6);
         }
 
-        /* Hero Content - Now at Bottom */
+        /* Hero Content */
         .hero-content {
             position: absolute;
-            bottom: 20px; /* Adjust spacing from bottom */
+            bottom: 20px;
             left: 50%;
-            transform: translateX(-50%); /* Center horizontally */
+            transform: translateX(-50%);
             text-align: center;
-            z-index: 2; /* Make sure it's above overlay */
+            z-index: 2;
             color: white;
             width: 100%;
         }
 
-        /* Booking Form - Inside Hero and at Bottom */
+        /* Booking Form */
         .booking-form-container {
             width: 100%;
             background: #06183B;
             padding: 15px 20px;
             border-top: 3px solid #06183B;
             box-shadow: 0 -4px 8px rgba(0, 0, 0, 0.2);
-            max-height: 50vh;
-            overflow-y: auto;
-            overflow-x: hidden;
+            margin-bottom: 80px;
         }
 
-
-        /* Prevent content from getting hidden behind the form */
-        body::after {
-            content: "";
-            display: block;
-            height: 20vh;
+        /* Room Types */
+        .room-card {
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+            background-color: white; /* Dark blue background */
+            color: black;
+            text-align: center;
+            padding: 15px; /* Ensure padding around the content */
         }
 
+            .room-card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+            }
+
+            /* Ensure image fits inside padding */
+            .room-card img {
+                width: 100%;
+                height: auto;
+                max-height: 180px; /* Prevents images from being too large */
+                object-fit: cover;
+            }
+
+        .book-btn {
+            background-color: #06183B;
+            color: white;
+            font-weight: bold;
+            border-radius: 5px;
+            padding: 8px 12px;
+            border: none;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+            .book-btn:hover {
+                background-color: #2C4E80;
+                color: white;
+            }
+
+        /* Services */
+        .service-box {
+            border: 2px solid #ccc;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: bold;
+            transition: all 0.3s ease-in-out;
+            background-color: white;
+            color: #00163a;
+        }
+
+            .service-box:hover {
+                background-color: #00163a;
+                color: white;
+                border-color: #00163a;
+            }
+
+            .service-box i {
+                font-size: 22px;
+                margin-right: 10px;
+            }
+
+        .room-types-section {
+            margin-bottom: 50px; /* Adjust as needed */
+        }
+
+        .services-section {
+            margin-top: 40px;
+            margin-bottom: 40px; /* Adjust this value for more/less spacing */
+        }
 
     </style>
 </head>
 <body>
+	<link href="c:\users\pc\source\repos\booktelxampp1\newbooktel\views\shared\_layout.cshtml.css" rel="stylesheet" />
+	<a href="c:\users\pc\source\repos\booktelxampp1\newbooktel\views\shared\_layout.cshtml">c:\users\pc\source\repos\booktelxampp1\newbooktel\views\shared\_layout.cshtml</a>
 
-    <!-- Hero Section -->
     <!-- Hero Section -->
     <div class="hero-section">
         <div class="hero-overlay"></div>
 
-        <!-- Container at the bottom -->
         <div class="container hero-content">
             <h1 class="fw-bold mb-4">Find Your Perfect Stay</h1>
             <p class="lead">Book the best rooms at the best prices.</p>
 
-            <!-- Booking Form inside hero -->
+            <!-- Booking Form -->
             <div class="booking-form-container">
                 <form>
                     <div class="row g-2">
@@ -131,9 +195,74 @@
         </div>
     </div>
 
+    <!-- Room Types -->
+    <div class="container mt-5">
+        <h2 class="text-center fw-bold">Room Types</h2>
+        <div class="row mt-4">
+            <div class="col-md-3">
+                <div class="room-card">
+                    <img src="/img/room1.svg" alt="Double Deluxe Room">
+                    <h5>Double Deluxe Room</h5>
+                    <p>₱2,628 - ₱3,788/night</p>
+                    <button class="book-btn">BOOK NOW</button>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="room-card">
+                    <img src="/img/room2.svg" alt="Presidential Suite">
+                    <h5>Presidential Suite</h5>
+                    <p>Php 600,000/night</p>
+                    <button class="book-btn">BOOK NOW</button>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="room-card">
+                    <img src="/img/room3.svg" alt="Standard Room">
+                    <h5>Standard Room</h5>
+                    <p>₱1,482 - ₱3,788/night</p>
+                    <button class="book-btn">BOOK NOW</button>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="room-card">
+                    <img src="/img/room4.svg" alt="Double Room">
+                    <h5>Double Room</h5>
+                    <p>₱6,927/night</p>
+                    <button class="book-btn">BOOK NOW</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Services Section -->
+    <div class="container services-section text-center">
+        <h2 class="fw-bold">Services</h2>
+        <div class="row justify-content-center mt-3">
+            <div class="col-md-3">
+                <div class="service-box">
+                    <i class="fas fa-utensils"></i> Restaurant
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="service-box">
+                    <i class="fas fa-dumbbell"></i> Fitness Center
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="service-box">
+                    <i class="fas fa-swimmer"></i> Swimming Pool
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="service-box">
+                    <i class="fas fa-glass-martini"></i> Bar
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
 </body>
 </html>
-

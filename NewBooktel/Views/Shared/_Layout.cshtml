@@ -13,6 +13,29 @@
         .navbar-nav .nav-link.active {
             color: #ffc107 !important;
         }
+
+        .footer {
+            background-color: #00163a; /* Dark blue background */
+            color: #ffffff; /* White text */
+            padding: 15px 0;
+            position: relative;
+            bottom: 0;
+            width: 100%;
+        }
+
+            .footer hr {
+                border: none;
+                height: 1px;
+                background-color: rgba(255, 255, 255, 0.2); /* Subtle line effect */
+                width: 80%;
+                margin: 10px auto;
+            }
+
+            .footer p {
+                font-size: 14px;
+                margin: 0;
+                opacity: 0.8;
+            }
     </style>
 </head>
 <body>
@@ -69,5 +92,14 @@
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container text-center">
+            <hr>
+            <p>Copyright ©2025 All rights reserved | Booktel Co.</p>
+        </div>
+    </footer>
+
 </body>
 </html>

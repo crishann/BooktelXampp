@@ -22,6 +22,16 @@ public class AdminController : Controller
             new { Code = "N970N835", RoomType = "Beach Double Room", CheckIn = DateTime.Parse("06/28/2018"), CheckOut = DateTime.Parse("06/30/2018"), Total = 300, FirstName = "John", LastName = "Smith", Email = "test@test.com", Phone = "212-324-5422" }
         };
 
+        var rooms = new List<object>
+    {
+        new { Name = "Double Deluxe Room", Price = "8,853", ImageUrl = "/images/room1.jpg" },
+        new { Name = "Presidential Suite", Price = "8,853", ImageUrl = "/images/room2.jpg" },
+        new { Name = "Standard Room", Price = "8,853", ImageUrl = "/images/room3.jpg" },
+        new { Name = "Double Room", Price = "8,853", ImageUrl = "/images/room4.jpg" }
+    };
+
+        ViewBag.Rooms = rooms;
+
         if (!IsAdmin()) return RedirectToAction("Index", "Home");
         return View();
     }
