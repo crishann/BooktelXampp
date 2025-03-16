@@ -112,12 +112,12 @@
                     @Html.AntiForgeryToken()
 
                     <div class="form-floating mb-3">
-                        <input name="FirstName" class="form-control" placeholder="First Name" required>
+                        <input type="text" name="FirstName" class="form-control capitalize" required>
                         <label>First Name</label>
                     </div>
 
                     <div class="form-floating mb-3">
-                        <input name="LastName" class="form-control" placeholder="Last Name" required>
+                        <input type="text" name="LastName" class="form-control capitalize" required>
                         <label>Last Name</label>
                     </div>
 
@@ -142,6 +142,19 @@
             </div>
         </div>
     </div>
+    
+    <!-- autocapitalize -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            let inputs = document.querySelectorAll(".capitalize");
+        
+            inputs.forEach(input => {
+                input.addEventListener("input", function () {
+                    this.value = this.value.replace(/\b\w/g, char => char.toUpperCase());
+                });
+            });
+        });
+    </script>
 
     <!-- jQuery & Bootstrap Scripts -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

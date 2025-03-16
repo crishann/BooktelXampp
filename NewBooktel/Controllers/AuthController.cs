@@ -51,6 +51,10 @@ namespace NewBooktel.Controllers
         {
             Console.WriteLine("📌 Registering User...");
 
+            // ✅ Capitalize First Name and Last Name before saving
+            FirstName = CapitalizeFirstLetter(FirstName);
+            LastName = CapitalizeFirstLetter(LastName);
+
             // ✅ Check if email already exists
             if (await _context.Users.AnyAsync(u => u.Email == Email))
             {
@@ -70,14 +74,14 @@ namespace NewBooktel.Controllers
                 Email = Email,
                 Password = hashedPassword,
                 Role = "Guest",
-                IsEmailConfirmed = false // ✅ Ensure database has this column
+                IsEmailConfirmed = false
             };
 
             _context.Users.Add(newUser);
             await _context.SaveChangesAsync();
 
             // ✅ Generate confirmation link
-            var token = Guid.NewGuid().ToString(); // Simulated token (consider using Identity)
+            var token = Guid.NewGuid().ToString();
             var confirmationLink = Url.Action("ConfirmEmail", "Auth",
                 new { email = newUser.Email, token = token }, Request.Scheme);
 
@@ -88,6 +92,7 @@ namespace NewBooktel.Controllers
             Console.WriteLine("✅ Confirmation email sent!");
             return RedirectToAction("Login", "Home");
         }
+
 
         // ✅ POST: Login User (Secure)
         [HttpPost]
@@ -166,6 +171,13 @@ namespace NewBooktel.Controllers
 
             Console.WriteLine("✅ Email confirmed successfully!");
             return View("EmailConfirmed");
+        }
+        public string CapitalizeFirstLetter(string input)
+        {
+            if (string.IsNullOrWhiteSpace(input))
+                return input;
+
+            return System.Globalization.CultureInfo.CurrentCulture.TextInfo.ToTitleCase(input.ToLower());
         }
     }
 }
