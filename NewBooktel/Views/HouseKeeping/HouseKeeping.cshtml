@@ -1,9 +1,6 @@
-﻿
-
-@{
-    Layout = "~/Views/Shared/_AdminLayout.cshtml";
-    ViewData["Title"] = "Housekeeping - Admin Panel";
-    var currentAction = ViewContext.RouteData.Values["Action"]?.ToString() ?? "";
+﻿@{
+    Layout = "~/Views/Shared/_HKeepingLayout.cshtml";
+    ViewData["Title"] = "Housekeeping - Staff Panel";
 }
 
 <!DOCTYPE html>
@@ -11,7 +8,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewData["Title"] - Admin Dashboard</title>
+    <title>@ViewData["Title"] - Housekeeping Dashboard</title>
 
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -39,17 +36,6 @@
             padding: 20px;
         }
 
-        .nav-link.active {
-            background-color: #f8f9fa;
-            color: black !important;
-            border-top-right-radius: 20px;
-            border-bottom-right-radius: 20px;
-            padding-left: 15px;
-            padding-top: 8px;
-            padding-bottom: 8px;
-            margin-right: 0;
-        }
-
         .housekeeping-table th, .housekeeping-table td {
             text-align: center;
         }
@@ -60,41 +46,17 @@
             border-radius: 5px;
             box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
         }
-
-            .task-form .form-control {
-                border-radius: 5px;
-            }
     </style>
 </head>
 <body>
 
-    <h1 class="mb-4">Housekeeping Management</h1>
+    <h1 class="mb-4">Housekeeping Dashboard</h1>
 
-    <!-- Assign Housekeeping Task Form -->
-    <div class="task-form mb-5">
-        <h3>Assign Housekeeping Task</h3>
-        <form method="post" action="/Admin/AssignHousekeepingTask">
-            <div class="mb-3">
-                <label for="roomNumber" class="form-label">Room Number</label>
-                <input type="number" class="form-control" id="roomNumber" name="roomNumber" required>
-            </div>
-            <div class="mb-3">
-                <label for="status" class="form-label">Status</label>
-                <select class="form-control" id="status" name="status" required>
-                    <option value="Pending">Pending</option>
-                    <option value="In Progress">In Progress</option>
-                    <option value="Completed">Completed</option>
-                </select>
-            </div>
-            <button type="submit" class="btn btn-primary">Assign Task</button>
-        </form>
-    </div>
-
-    <!-- Housekeeping Tasks Table -->
+    <!-- Housekeeping Tasks Table for Staff -->
     <div class="housekeeping-table mb-5">
-        <h3>Housekeeping Tasks</h3>
+        <h3>Rooms to be Cleaned</h3>
         <table class="table table-bordered">
-            <thead class="table-dark">
+            <thead class="table-warning">
                 <tr>
                     <th>Room Number</th>
                     <th>Status</th>
@@ -109,8 +71,7 @@
                     <td>Pending</td>
                     <td>2025-04-07</td>
                     <td>
-                        <button class="btn btn-success btn-sm">Mark as In Progress</button>
-                        <button class="btn btn-danger btn-sm">Cancel</button>
+                        <button class="btn btn-success btn-sm" onclick="markAsCleaned(101)">Mark as Cleaned</button>
                     </td>
                 </tr>
                 <tr>
@@ -118,13 +79,21 @@
                     <td>In Progress</td>
                     <td>2025-04-06</td>
                     <td>
-                        <button class="btn btn-warning btn-sm">Mark as Completed</button>
+                        <button class="btn btn-success btn-sm" onclick="markAsCleaned(102)">Mark as Cleaned</button>
                     </td>
                 </tr>
                 <!-- End Example Rows -->
             </tbody>
         </table>
     </div>
+
+    <script>
+        // Example functions for housekeeping actions
+        function markAsCleaned(roomNumber) {
+            alert("Room " + roomNumber + " has been marked as cleaned.");
+            // Implement the actual action logic here (e.g., sending an API request to update the room's status)
+        }
+    </script>
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

@@ -1,4 +1,7 @@
-﻿@{
+﻿@model NewBooktel.Models.Booking
+
+
+@{
     ViewData["Title"] = "Reservation";
 }
 
@@ -94,30 +97,30 @@
     <div class="main-container">
         <!-- Booking Form (Fixed at the Top) -->
         <div class="reservation-container">
-            <form>
+            <form asp-action="Create" asp-controller="Booking" method="post">
                 <div class="row g-2">
                     <div class="col-md-3">
                         <label class="fw-bold">Check-in Date</label>
-                        <input type="date" class="form-control">
+                        <input asp-for="CheckInDate" type="date" class="form-control" required />
                     </div>
                     <div class="col-md-3">
                         <label class="fw-bold">Check-out Date</label>
-                        <input type="date" class="form-control">
+                        <input asp-for="CheckOutDate" type="date" class="form-control" required />
                     </div>
                     <div class="col-md-2">
                         <label class="fw-bold">Guests</label>
-                        <select class="form-select">
-                            <option>1</option>
-                            <option>2</option>
-                            <option>3+</option>
+                        <select asp-for="Guest" class="form-select">
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
                         </select>
                     </div>
                     <div class="col-md-2">
                         <label class="fw-bold">Room Type</label>
-                        <select class="form-select">
-                            <option>Standard</option>
-                            <option>Deluxe</option>
-                            <option>Suite</option>
+                        <select asp-for="RoomType" class="form-select">
+                            <option value="Standard">Standard</option>
+                            <option value="Deluxe">Deluxe</option>
+                            <option value="Suite">Suite</option>
                         </select>
                     </div>
                     <div class="col-md-2 d-flex align-items-end">
@@ -125,6 +128,7 @@
                     </div>
                 </div>
             </form>
+
         </div>
 
         <!-- Below: Side-by-Side Layout for Hotels & Invoice -->

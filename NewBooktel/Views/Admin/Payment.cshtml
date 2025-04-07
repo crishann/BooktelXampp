@@ -1,4 +1,238 @@
 ﻿@{
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
-    ViewData["Title"] = "Payment";
+    ViewData["Title"] = "Payments - Admin Panel";
+    var currentAction = ViewContext.RouteData.Values["Action"]?.ToString() ?? "";
 }
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"] - Admin Dashboard</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+
+        .sidebar {
+            width: 250px;
+            height: 100vh;
+            background: #00163a;
+            color: white;
+            padding: 20px;
+            position: fixed;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            margin-right: 0px;
+        }
+
+        .content {
+            margin-left: 260px;
+            padding: 20px;
+        }
+
+        .logout-btn {
+            background: #dc3545;
+            color: white;
+            border: none;
+            width: 100%;
+            padding: 10px;
+            text-align: center;
+            font-weight: bold;
+            border-radius: 5px;
+            margin-top: auto;
+        }
+
+            .logout-btn:hover {
+                background: #c82333;
+                color: white;
+            }
+
+        .nav-link.active {
+            background-color: #f8f9fa;
+            color: black !important;
+            border-top-right-radius: 20px;
+            border-bottom-right-radius: 20px;
+            padding-left: 15px;
+            padding-top: 8px;
+            padding-bottom: 8px;
+            margin-right: 0;
+            overflow: hidden;
+            white-space: nowrap;
+        }
+
+        .payment-table th, .payment-table td {
+            text-align: center;
+        }
+
+        .payment-form {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0px 0px 15px #00163a;
+        }
+
+            .payment-form .form-control {
+                border-radius: 5px;
+            }
+
+    </style>
+</head>
+<body>
+
+    <h1 class="mb-4">Manage Payments</h1>
+
+    <!-- Payment Table for Completed Payments -->
+    <div class="payment-table mb-5">
+        <h3>Completed Payments</h3>
+        <table class="table table-bordered">
+            <thead class="table-dark">
+                <tr>
+                    <th>ID</th>
+                    <th>User</th>
+                    <th>Room Number</th>
+                    <th>Amount</th>
+                    <th>Payment Date</th>
+                    <th>Status</th>
+                    <th>Payment Method</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Example Rows - Replace with actual data -->
+                <tr>
+                    <td>001</td>
+                    <td>John Doe</td>
+                    <td>101</td>
+                    <td>$120.00</td>
+                    <td>2025-04-07</td>
+                    <td>Completed</td>
+                    <td>Credit Card</td>
+                </tr>
+                <tr>
+                    <td>002</td>
+                    <td>Jane Smith</td>
+                    <td>102</td>
+                    <td>$85.00</td>
+                    <td>2025-04-06</td>
+                    <td>Completed</td>
+                    <td>PayPal</td>
+                </tr>
+                <!-- End Example Rows -->
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Payment Table for Pending Payments -->
+    <div class="payment-table mb-5">
+        <h3>Pending Payments</h3>
+        <table class="table table-bordered">
+            <thead class="table-warning">
+                <tr>
+                    <th>ID</th>
+                    <th>User</th>
+                    <th>Room Number</th>
+                    <th>Amount</th>
+                    <th>Payment Date</th>
+                    <th>Status</th>
+                    <th>Payment Method</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Example Pending Rows - Replace with actual data -->
+                <tr>
+                    <td>003</td>
+                    <td>Michael Johnson</td>
+                    <td>103</td>
+                    <td>$150.00</td>
+                    <td>2025-04-07</td>
+                    <td>Pending</td>
+                    <td>Debit Card</td>
+                    <td>
+                        <button class="btn btn-success btn-sm" onclick="markAsCompleted(3)">Mark as Completed</button>
+                        <button class="btn btn-danger btn-sm" onclick="cancelPayment(3)">Cancel</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>004</td>
+                    <td>Emily Davis</td>
+                    <td>104</td>
+                    <td>$95.00</td>
+                    <td>2025-04-06</td>
+                    <td>Pending</td>
+                    <td>Bank Transfer</td>
+                    <td>
+                        <button class="btn btn-success btn-sm" onclick="markAsCompleted(4)">Mark as Completed</button>
+                        <button class="btn btn-danger btn-sm" onclick="cancelPayment(4)">Cancel</button>
+                    </td>
+                </tr>
+                <!-- End Example Rows -->
+            </tbody>
+        </table>
+    </div>
+
+    @* <!-- Add Payment Form --> *@
+    @* <div class="payment-form"> *@
+    @*     <h3>Add New Payment</h3> *@
+    @*     <form method="post" action="/Admin/AddPayment"> *@
+    @*         <div class="mb-3"> *@
+    @*             <label for="userName" class="form-label">User Name</label> *@
+    @*             <input type="text" class="form-control" id="userName" name="userName" required> *@
+    @*         </div> *@
+    @*         <div class="mb-3"> *@
+    @*             <label for="roomNumber" class="form-label">Room Number</label> *@
+    @*             <input type="number" class="form-control" id="roomNumber" name="roomNumber" required> *@
+    @*         </div> *@
+    @*         <div class="mb-3"> *@
+    @*             <label for="amount" class="form-label">Amount</label> *@
+    @*             <input type="number" class="form-control" id="amount" name="amount" required> *@
+    @*         </div> *@
+    @*         <div class="mb-3"> *@
+    @*             <label for="paymentDate" class="form-label">Payment Date</label> *@
+    @*             <input type="date" class="form-control" id="paymentDate" name="paymentDate" required> *@
+    @*         </div> *@
+    @*         <div class="mb-3"> *@
+    @*             <label for="paymentStatus" class="form-label">Payment Status</label> *@
+    @*             <select class="form-control" id="paymentStatus" name="paymentStatus" required> *@
+    @*                 <option value="Completed">Completed</option> *@
+    @*                 <option value="Pending">Pending</option> *@
+    @*                 <option value="Failed">Failed</option> *@
+    @*             </select> *@
+    @*         </div> *@
+    @*         <div class="mb-3"> *@
+    @*             <label for="paymentMethod" class="form-label">Payment Method</label> *@
+    @*             <select class="form-control" id="paymentMethod" name="paymentMethod" required> *@
+    @*                 <option value="Credit Card">Credit Card</option> *@
+    @*                 <option value="Debit Card">Debit Card</option> *@
+    @*                 <option value="PayPal">PayPal</option> *@
+    @*                 <option value="Bank Transfer">Bank Transfer</option> *@
+    @*             </select> *@
+    @*         </div> *@
+    @*         <button type="submit" class="btn btn-primary">Add Payment</button> *@
+    @*     </form> *@
+    @* </div> *@
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        // Example functions to handle pending payment actions
+        function markAsCompleted(paymentId) {
+            alert("Payment " + paymentId + " has been marked as completed.");
+            // Implement the actual action logic here (e.g., sending an API request to update the payment status)
+        }
+
+        function cancelPayment(paymentId) {
+            alert("Payment " + paymentId + " has been cancelled.");
+            // Implement the actual action logic here (e.g., sending an API request to delete or cancel the payment)
+        }
+    </script>
+
+</body>
+</html>

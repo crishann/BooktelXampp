@@ -7,7 +7,12 @@ namespace NewBooktel.Data
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
 
+
+
         public DbSet<User> Users { get; set; } = null!;
         public DbSet<Room> Rooms { get; set; } = null!;
+        public DbSet<Booking> Bookings { get; set; }
+
     }
+
 }

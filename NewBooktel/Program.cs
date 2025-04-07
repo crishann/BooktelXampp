@@ -38,6 +38,14 @@ builder.Services.AddAntiforgery(options =>
 // ✅ Add MVC Controllers & Views
 builder.Services.AddControllersWithViews();
 
+// ✅ Add Authentication Services (Cookie Authentication)
+builder.Services.AddAuthentication("Cookies")
+    .AddCookie("Cookies", options =>
+    {
+        options.LoginPath = "/Auth/Login"; // Redirect here when unauthenticated
+        options.AccessDeniedPath = "/Auth/AccessDenied"; // Optional: Redirect for access denied
+    });
+
 var app = builder.Build(); // 🚨 NO service registrations after this line!
 
 if (!app.Environment.IsDevelopment())
@@ -50,12 +58,16 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
 
+// ✅ Use Authentication Middleware
+app.UseAuthentication(); // Add this line
+
 // ✅ Enable Sessions before Authorization
 app.UseSession();
 app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Auth}/{action=Login}/{id?}"); // ✅ Default route to Login
+    pattern: "{controller=Auth}/{action=Login}/{id?}"); // Default route to Login
+
 
 app.Run();

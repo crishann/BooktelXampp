@@ -7,7 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Views\HkDash\" />
     <Folder Include="Views\Fdesk\" />
     <Folder Include="wwwroot\img\hotels\" />
   </ItemGroup>

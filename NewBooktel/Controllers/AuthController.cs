@@ -36,6 +36,10 @@ namespace NewBooktel.Controllers
         {
             return View("~/Views/Home/Login.cshtml");
         }
+        public IActionResult HouseKeeping()
+        {
+            return View("~/Views/HouseKeeping/HouseKeeping.cshtml");
+        }
 
         // ✅ GET: User Profile Page
         [HttpGet]
@@ -94,10 +98,9 @@ namespace NewBooktel.Controllers
         }
 
 
-        // ✅ POST: Login User (Secure)
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Login(string Email, string Password)
+        public async Task<IActionResult> Login(string Email, string Password, string returnUrl = null)
         {
             var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == Email);
             if (user == null)
@@ -112,7 +115,6 @@ namespace NewBooktel.Controllers
                 return View("~/Views/Home/Login.cshtml");
             }
 
-            // ✅ Validate password
             bool isPasswordValid = BCrypt.Net.BCrypt.Verify(Password, user.Password);
             if (!isPasswordValid)
             {
@@ -120,29 +122,35 @@ namespace NewBooktel.Controllers
                 return View("~/Views/Home/Login.cshtml");
             }
 
-            // ✅ Debugging output: Print the retrieved role from DB
-            Console.WriteLine($"📌 DEBUG: Retrieved Role from DB = '{user.Role}'");
+            user.Role = user.Role.Trim().ToLower();
 
-            // ✅ Store session (Ensure lowercase for comparison)
             HttpContext.Session.SetString("UserFirstName", user.FirstName);
             HttpContext.Session.SetString("UserEmail", user.Email);
-            HttpContext.Session.SetString("UserRole", user.Role.Trim().ToLower()); // Normalize Role
+            HttpContext.Session.SetString("UserRole", user.Role);
 
-            // ✅ Debugging: Print stored session role
-            Console.WriteLine($"📌 DEBUG: Stored Session Role = '{HttpContext.Session.GetString("UserRole")}'");
-
-            // ✅ Redirect Based on Role
-            if (user.Role.Trim().ToLower() == "admin")
+            // If ReturnUrl is set, redirect to that URL after login
+            if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
             {
-                Console.WriteLine("✅ Redirecting to Admin Dashboard...");
-                return RedirectToAction("AdminIndex", "Admin"); // ✅ Redirect Admin to Admin Dashboard
+                return Redirect(returnUrl); // Redirect to original requested page
+            }
+
+            // Default redirect if ReturnUrl is not available
+            if (user.Role == "admin")
+            {
+                return RedirectToAction("AdminIndex", "Admin");
+            }
+            else if (user.Role == "housekeeping")
+            {
+                return RedirectToAction("Dashboard", "Housekeeping");
             }
             else
             {
-                Console.WriteLine("✅ Redirecting to User Dashboard...");
-                return RedirectToAction("Reservation", "UserDash"); // ✅ Redirect Regular Users
+                return RedirectToAction("Reservation", "UserDash");
             }
         }
+
+
+
 
 
 
@@ -163,6 +171,7 @@ namespace NewBooktel.Controllers
         {
             return BCrypt.Net.BCrypt.HashPassword(password);
         }
+
 
         // ✅ GET: Confirm Email
         [HttpGet]
