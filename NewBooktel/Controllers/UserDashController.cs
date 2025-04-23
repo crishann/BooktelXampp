@@ -15,6 +15,32 @@ public class UserDashController : Controller
     {
         _context = context;
     }
+    public IActionResult BookingSummary() 
+    {
+        return View("~/Views/UserDash/BookingSummary.cshtml");
+    }
+
+    //public IActionResult BookingForm()
+    //{
+    //    return View("~/Views/UserDash/BookingForm.cshtml");
+    //}
+    public IActionResult BookingForm()
+    {
+        var role = HttpContext.Session.GetString("UserRole");
+
+        if (string.IsNullOrEmpty(role))
+        {
+            return RedirectToAction("Login", "Home"); // User not logged in
+        }
+
+        if (role != "guest")
+        {
+            return RedirectToAction("Unauthorized", "Home"); // Optional: Show "Access Denied" page
+        }
+
+        return View(); // Authorized guest
+    }
+
 
     // ✅ Reservation Page
     public IActionResult Reservation()

@@ -11,86 +11,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BookTel - Hotel Reservation</title>
+    <link rel="stylesheet" href="~/css/UserDash.css" />
 
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
-    <style>
-        body, html {
-            height: 100%;
-            margin: 0;
-            background: #f8f9fa;
-        }
-
-        /* Main Container */
-        .main-container {
-            display: flex;
-            flex-direction: column;
-            height: 100vh;
-            padding: 20px;
-        }
-
-        /* Booking Form - Fixed at the Top */
-        .reservation-container {
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-        }
-
-        /* Content Container: Hotels (Left) & Invoice (Right) */
-        .content-container {
-            display: flex;
-            flex-grow: 1;
-            gap: 20px;
-            overflow: hidden;
-        }
-
-        /* Hotels List (Scrollable) */
-        .hotels-section {
-            flex: 1;
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-            overflow-y: auto;
-            max-height: calc(100vh - 120px); /* Prevents it from exceeding screen height */
-        }
-
-        /* Hotel Cards */
-        .hotel-card {
-            display: flex;
-            background: white;
-            padding: 15px;
-            border-radius: 8px;
-            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-            margin-bottom: 15px;
-            align-items: center;
-        }
-
-            .hotel-card img {
-                width: 100px;
-                height: 100px;
-                border-radius: 5px;
-                margin-right: 15px;
-            }
-
-        /* Invoice Section - Fixed */
-        .invoice-section {
-            flex: 1;
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-            position: sticky;
-            top: 120px; /* Align with the booking form */
-            height: fit-content;
-        }
-
-    </style>
 </head>
 <body>
 
@@ -101,11 +26,12 @@
                 <div class="row g-2">
                     <div class="col-md-3">
                         <label class="fw-bold">Check-in Date</label>
-                        <input asp-for="CheckInDate" type="date" class="form-control" required />
+                        <input asp-for="CheckInDate" type="date" class="form-control" id="checkin" required />
                     </div>
+
                     <div class="col-md-3">
                         <label class="fw-bold">Check-out Date</label>
-                        <input asp-for="CheckOutDate" type="date" class="form-control" required />
+                        <input asp-for="CheckOutDate" type="date" class="form-control" id="checkout" required />
                     </div>
                     <div class="col-md-2">
                         <label class="fw-bold">Guests</label>
@@ -121,6 +47,8 @@
                             <option value="Standard">Standard</option>
                             <option value="Deluxe">Deluxe</option>
                             <option value="Suite">Suite</option>
+                            <option value="Premium Suite">Premium Suite</option>
+                            <option value="Business">Bussiness</option>
                         </select>
                     </div>
                     <div class="col-md-2 d-flex align-items-end">
@@ -229,6 +157,35 @@
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <div class="col-md-3">
+        <label class="fw-bold">Check-in Date</label>
+        <input asp-for="CheckInDate" type="date" class="form-control" id="checkin" required />
+    </div>
+
+    <div class="col-md-3">
+        <label class="fw-bold">Check-out Date</label>
+        <input asp-for="CheckOutDate" type="date" class="form-control" id="checkout" required />
+    </div>
+
+    <script>
+        const today = new Date();
+        const yyyy = today.getFullYear();
+        const mm = String(today.getMonth() + 1).padStart(2, '0');
+        const dd = String(today.getDate()).padStart(2, '0');
+        const minDate = `${yyyy}-${mm}-${dd}`;
+
+        // Set the min date to today for both inputs
+        document.getElementById("checkin").min = minDate;
+        document.getElementById("checkout").min = minDate;
+
+        // Optional: Auto-set checkout min to check-in + 1 day
+        document.getElementById("checkin").addEventListener("change", function () {
+            const checkInDate = new Date(this.value);
+            checkInDate.setDate(checkInDate.getDate() + 1); // Next day
+            const nextDay = checkInDate.toISOString().split('T')[0];
+            document.getElementById("checkout").min = nextDay;
+        });
+    </script>
 
 </body>
 </html>
