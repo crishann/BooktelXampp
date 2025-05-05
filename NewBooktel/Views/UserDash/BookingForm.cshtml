@@ -9,22 +9,21 @@
 <form asp-action="CreateBooking" asp-controller="UserDash" method="post">
     <div class="form-group">
         <label asp-for="CheckInDate">Check-in Date:</label>
-        <input asp-for="CheckInDate" type="date" class="form-control" value="@Model.CheckInDate.ToString("yyyy-MM-dd")" readonly />
+        <input asp-for="CheckInDate" type="date" class="form-control" value="@(Model.CheckInDate.HasValue ? Model.CheckInDate.Value.ToString("yyyy-MM-dd") : "")" readonly />
     </div>
     <div class="form-group">
         <label asp-for="CheckOutDate">Check-out Date:</label>
-        <input asp-for="CheckOutDate" type="date" class="form-control" value="@Model.CheckOutDate.ToString("yyyy-MM-dd")" readonly />
+        <input asp-for="CheckOutDate" type="date" class="form-control" value="@(Model.CheckOutDate.HasValue ? Model.CheckOutDate.Value.ToString("yyyy-MM-dd") : "")" readonly />
     </div>
-    <div class="form-group">
-        <label asp-for="Guest">Number of Guests:</label>
-        <input asp-for="Guest" type="number" class="form-control" value="@Model?.Guest" readonly />
-    </div>
+    <label asp-for="Guest">Number of Guests:</label>
+    <input asp-for="Guest" type="number" class="form-control" value="@Model?.Guest" readonly />
+    
     <div class="form-group">
         <label asp-for="RoomType">Room Type:</label>
         <input asp-for="RoomType" type="text" class="form-control" value="@Model?.RoomType" readonly />
     </div>
 
-    @* Add other necessary input fields for the complete booking information *@
+        @* Add other necessary input fields for the complete booking information *@
     <div class="form-group">
         <label asp-for="FullName">Full Name:</label>
         <input asp-for="FullName" type="text" class="form-control" required />
@@ -33,7 +32,7 @@
         <label asp-for="Email">Email:</label>
         <input asp-for="Email" type="email" class="form-control" required />
     </div>
-    @* ... other fields ... *@
+        @* ... other fields ... *@
 
     <button type="submit" class="btn btn-primary">Confirm Booking</button>
 </form>

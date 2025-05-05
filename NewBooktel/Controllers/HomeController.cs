@@ -19,6 +19,12 @@ namespace NewBooktel.Controllers
             _roomService = roomService;
         }
 
+        public IActionResult Reserve()
+        {
+            return View();
+        }
+
+
         public async Task<IActionResult> Index()
         {
             var rooms = await _roomService.GetAllRoomsAsync(); // ✅ Fetch rooms from database

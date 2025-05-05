@@ -6,7 +6,9 @@ using NewBooktel.Models;
 using Microsoft.AspNetCore.Http;
 using System.Security.Cryptography;
 using BCrypt.Net;
+using Microsoft.AspNetCore.Authorization;
 
+[Authorize] // ✅ Apply authorization at the controller level - requires login for all actions
 public class UserDashController : Controller
 {
     private readonly ApplicationDbContext _context;
@@ -16,14 +18,11 @@ public class UserDashController : Controller
         _context = context;
     }
 
-    //public IActionResult Index()
-    //{
-    //    return View("BookingForm");
-    //}
-
+    // ✅ Booking Form - Handles initial display and pre-filled data
     public IActionResult Index(DateTime? CheckInDate, DateTime? CheckOutDate, int? Guest, string RoomType)
     {
-        var bookingModel = new Booking();
+        var bookingModel = new Booking { RoomType = "Default" };
+        
 
         // Optionally, pre-populate the model with the query parameters if needed
         if (CheckInDate.HasValue)
@@ -47,7 +46,7 @@ public class UserDashController : Controller
     }
 
 
-    // ✅ Reservation Page
+    // ✅ Reservation Page - Accessible to logged-in users
     public IActionResult Reservation()
     {
         return View("~/Views/UserDash/Reservation.cshtml");
@@ -60,13 +59,13 @@ public class UserDashController : Controller
         string? userEmail = HttpContext.Session.GetString("UserEmail"); // Allow null
         if (string.IsNullOrEmpty(userEmail))
         {
-            return RedirectToAction("Login", "Home");
+            return RedirectToAction("Login", "Auth"); // Redirect to Auth controller's Login
         }
 
         var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == userEmail);
         if (user == null)
         {
-            return RedirectToAction("Login", "Home");
+            return RedirectToAction("Login", "Auth"); // Redirect to Auth controller's Login
         }
 
         return View(user);
