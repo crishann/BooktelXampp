@@ -8,6 +8,10 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using BCrypt.Net; // ✅ Import BCrypt for password hashing
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using System.Collections.Generic;
+using System.Security.Claims;
 
 namespace NewBooktel.Controllers
 {
@@ -103,45 +107,50 @@ namespace NewBooktel.Controllers
         public async Task<IActionResult> Login(string Email, string Password, string returnUrl = null)
         {
             var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == Email);
-            if (user == null)
+            if (user == null || !BCrypt.Net.BCrypt.Verify(Password, user.Password) || !user.IsEmailConfirmed)
             {
-                ViewBag.ErrorMessage = "Invalid email or password.";
+                ViewBag.ErrorMessage = "Invalid login attempt.";
                 return View("~/Views/Home/Login.cshtml");
             }
 
-            if (!user.IsEmailConfirmed)
+            var claims = new List<Claim>
             {
-                ViewBag.ErrorMessage = "Please verify your email before logging in.";
-                return View("~/Views/Home/Login.cshtml");
-            }
+                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()), // Or some unique user identifier
+                new Claim(ClaimTypes.Name, user.FirstName + " " + user.LastName),
+                new Claim(ClaimTypes.Email, user.Email),
+                new Claim(ClaimTypes.Role, user.Role?.Trim().ToLower() ?? ""), // Add the user's role as a claim (handle potential null)
+            };
 
-            bool isPasswordValid = BCrypt.Net.BCrypt.Verify(Password, user.Password);
-            if (!isPasswordValid)
+            var claimsIdentity = new ClaimsIdentity(
+                claims, CookieAuthenticationDefaults.AuthenticationScheme);
+
+            var authProperties = new AuthenticationProperties
             {
-                ViewBag.ErrorMessage = "Invalid email or password.";
-                return View("~/Views/Home/Login.cshtml");
-            }
+                // You can set various authentication properties here, like RememberMe
+            };
 
-            user.Role = user.Role.Trim().ToLower();
+            await HttpContext.SignInAsync(
+                CookieAuthenticationDefaults.AuthenticationScheme,
+                new ClaimsPrincipal(claimsIdentity),
+                authProperties);
 
+            // Remove setting role in session, as it's now in the claims
             HttpContext.Session.SetString("UserFirstName", user.FirstName);
             HttpContext.Session.SetString("UserEmail", user.Email);
-            HttpContext.Session.SetString("UserRole", user.Role);
+            // HttpContext.Session.SetString("UserRole", user.Role); // Remove this line
 
-            // If ReturnUrl is set, redirect to that URL after login
             if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
             {
-                return Redirect(returnUrl); // Redirect to original requested page
+                return Redirect(returnUrl);
             }
 
-            // Default redirect if ReturnUrl is not available
-            if (user.Role == "admin")
+            if (user.Role?.Trim().ToLower() == "admin")
             {
                 return RedirectToAction("AdminIndex", "Admin");
             }
-            else if (user.Role == "housekeeping")
+            else if (user.Role?.Trim().ToLower() == "housekeeping")
             {
-                return RedirectToAction("Housekeeping", "Housekeeping");
+                return RedirectToAction("Index", "Housekeeping"); // Redirect to the correct Housekeeping action
             }
             else
             {

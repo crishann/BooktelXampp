@@ -1,12 +1,11 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-//[Authorize(Roles = "housekeeping")]
 public class HousekeepingController : Controller
 {
     // GET: Housekeeping Dashboard
-    [Authorize(Roles = "Housekeeping")]
-    public IActionResult Housekeeping()
+    [Authorize(Roles = "housekeeping")]
+    public IActionResult Index()
     {
         return View("~/Views/HouseKeeping/HouseKeeping.cshtml");
     }

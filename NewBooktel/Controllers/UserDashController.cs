@@ -16,6 +16,37 @@ public class UserDashController : Controller
         _context = context;
     }
 
+    //public IActionResult Index()
+    //{
+    //    return View("BookingForm");
+    //}
+
+    public IActionResult Index(DateTime? CheckInDate, DateTime? CheckOutDate, int? Guest, string RoomType)
+    {
+        var bookingModel = new Booking();
+
+        // Optionally, pre-populate the model with the query parameters if needed
+        if (CheckInDate.HasValue)
+        {
+            bookingModel.CheckInDate = CheckInDate.Value;
+        }
+        if (CheckOutDate.HasValue)
+        {
+            bookingModel.CheckOutDate = CheckOutDate.Value;
+        }
+        if (Guest.HasValue)
+        {
+            bookingModel.Guest = Guest.Value;
+        }
+        if (!string.IsNullOrEmpty(RoomType))
+        {
+            bookingModel.RoomType = RoomType;
+        }
+
+        return View("BookingForm", bookingModel);
+    }
+
+
     // ✅ Reservation Page
     public IActionResult Reservation()
     {

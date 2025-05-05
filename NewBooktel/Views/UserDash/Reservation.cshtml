@@ -94,19 +94,19 @@
 
     <div class="main-container">
         <div class="reservation-container">
-            <form asp-action="Create" asp-controller="Booking" method="post">
+            <form asp-action="Index" asp-controller="UserDash" method="get">
                 <div class="row g-2">
                     <div class="col-md-3">
                         <label class="fw-bold">Check-in Date</label>
-                        <input asp-for="CheckInDate" id="checkinDate" type="date" class="form-control" required min="@DateTime.Now.ToString("yyyy-MM-dd")" />
+                        <input asp-for="CheckInDate" id="checkinDate" type="date" class="form-control" required min="@DateTime.Now.ToString("yyyy-MM-dd")" name="CheckInDate" />
                     </div>
                     <div class="col-md-3">
                         <label class="fw-bold">Check-out Date</label>
-                        <input asp-for="CheckOutDate" id="checkoutDate" type="date" class="form-control" required />
+                        <input asp-for="CheckOutDate" id="checkoutDate" type="date" class="form-control" required name="CheckOutDate" />
                     </div>
                     <div class="col-md-2">
                         <label class="fw-bold">Guests</label>
-                        <select asp-for="Guest" class="form-select">
+                        <select asp-for="Guest" class="form-select" name="Guest">
                             <option value="1">1</option>
                             <option value="2">2</option>
                             <option value="3">3</option>
@@ -114,7 +114,7 @@
                     </div>
                     <div class="col-md-2">
                         <label class="fw-bold">Room Type</label>
-                        <select asp-for="RoomType" class="form-select">
+                        <select asp-for="RoomType" class="form-select" name="RoomType">
                             <option value="Standard">Standard</option>
                             <option value="Deluxe">Deluxe</option>
                             <option value="Suite">Suite</option>

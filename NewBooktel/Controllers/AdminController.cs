@@ -4,16 +4,12 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
 
+[Authorize(Roles = "admin")] // ✅ Restrict Access to Admins Only using Attribute
 public class AdminController : Controller
 {
-    // ✅ Restrict Access to Admins Only
-    private bool IsAdmin()
-    {
-        var role = HttpContext.Session.GetString("UserRole") ?? "unknown";
-        Console.WriteLine($"📌 DEBUG: Retrieved Session Role = '{role}'"); // ✅ Debugging output
-        return role == "admin"; // Ensure lowercase comparison
-    }
+    // ✅ Removed the manual IsAdmin check as [Authorize] handles it
 
     public IActionResult AdminIndex()
     {
@@ -59,43 +55,36 @@ public class AdminController : Controller
 
         ViewBag.Rooms = rooms;
 
-        if (!IsAdmin()) return RedirectToAction("Index", "Home");
         return View();
     }
 
     public IActionResult BookingReq()
     {
-        if (!IsAdmin()) return RedirectToAction("Index", "Home");
         return View();
     }
 
     public IActionResult Checkin()
     {
-        if (!IsAdmin()) return RedirectToAction("Index", "Home");
         return View();
     }
 
     public IActionResult Checkout()
     {
-        if (!IsAdmin()) return RedirectToAction("Index", "Home");
         return View();
     }
 
     public IActionResult Housekeeping()
     {
-        if (!IsAdmin()) return RedirectToAction("Index", "Home");
         return View();
     }
 
     public IActionResult Payment()
     {
-        if (!IsAdmin()) return RedirectToAction("Index", "Home");
         return View();
     }
 
     public IActionResult Rooms()
     {
-        if (!IsAdmin()) return RedirectToAction("Index", "Home");
         return View();
     }
 
@@ -118,5 +107,4 @@ public class AdminController : Controller
         // Redirect or return a response
         return RedirectToAction("Rooms");  // Redirect back to the rooms page
     }
-
 }

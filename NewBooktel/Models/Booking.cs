@@ -9,10 +9,11 @@
         public DateTime CheckOutDate { get; set; }
         public int Guest { get; set; }
         public string RoomType { get; set; }
-
         public decimal TotalAmount { get; set; }
         public string Status { get; set; } = "Pending";
         public DateTime CreatedAt { get; set; } = DateTime.Now;
-    }
 
+        public string? FullName { get; set; }  // Add this
+        public string? Email { get; set; }    // Add this
+    }
 }
