@@ -141,7 +141,7 @@ namespace NewBooktel.Controllers
             }
             else if (user.Role == "housekeeping")
             {
-                return RedirectToAction("Dashboard", "Housekeeping");
+                return RedirectToAction("Housekeeping", "Housekeeping");
             }
             else
             {
