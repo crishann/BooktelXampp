@@ -29,8 +29,33 @@
                 text-decoration: none;
                 margin-bottom: 10px;
                 display: block;
+                /* Add some padding for better click area if desired */
+                padding: 5px 0;
             }
 
+            /* New styles for the logout button */
+            .sidebar .logout-btn {
+                background: none; /* Remove default button background */
+                border: none; /* Remove default button border */
+                color: white; /* Match link color */
+                padding: 0; /* Remove default button padding, adjust as needed */
+                margin: 0; /* Remove default button margin, adjust as needed */
+                text-align: left; /* Align text like the links */
+                text-decoration: none; /* Ensure no underline from button defaults */
+                display: block; /* Make it take the full width like the links */
+                width: 100%; /* Ensure it takes full available width */
+                margin-bottom: 10px; /* Match link margin */
+                cursor: pointer; /* Show pointer on hover */
+                /* Add some padding for better click area if desired, similar to links */
+                padding: 5px 0;
+                font-size: inherit; /* Make it use the same font size as surrounding text */
+                font-family: inherit; /* Make it use the same font family */
+            }
+
+                .sidebar .logout-btn:hover {
+                    text-decoration: underline; /* Optional: Add underline on hover like typical links */
+                }
+        /* ... rest of your existing CSS ... */
         .content {
             margin-left: 260px;
             padding: 20px;
@@ -59,7 +84,9 @@
         </div>
         <div>
             <hr>
-            <a href="#">Logout</a>
+            <form asp-controller="Auth" asp-action="Logout" method="get">
+                <button type="submit" class="logout-btn">Logout</button>
+            </form>
         </div>
     </div>
 
