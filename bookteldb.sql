@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 05, 2025 at 08:22 PM
+-- Generation Time: May 06, 2025 at 12:15 PM
 -- Server version: 10.4.32-MariaDB
--- PHP Version: 8.2.12
+-- PHP Version: 8.0.30
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -43,6 +43,27 @@ INSERT INTO `rooms` (`Id`, `Name`, `Price`, `ImageUrl`) VALUES
 (2, 'Double Room', 3.00, '/img/room4.svg'),
 (3, 'Double Deluxe Room', 6927.00, '/img/room1.svg'),
 (4, 'Presidential Suite', 50000.00, '/img/room2.svg');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `roomtasks`
+--
+
+CREATE TABLE `roomtasks` (
+  `Id` int(11) NOT NULL,
+  `RoomNumber` int(11) NOT NULL,
+  `Status` varchar(50) NOT NULL,
+  `AssignedDate` date NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `roomtasks`
+--
+
+INSERT INTO `roomtasks` (`Id`, `RoomNumber`, `Status`, `AssignedDate`) VALUES
+(1, 101, 'Cleaned', '2025-04-07'),
+(2, 102, 'In Progress', '2025-04-06');
 
 -- --------------------------------------------------------
 
@@ -108,6 +129,12 @@ ALTER TABLE `rooms`
   ADD PRIMARY KEY (`Id`);
 
 --
+-- Indexes for table `roomtasks`
+--
+ALTER TABLE `roomtasks`
+  ADD PRIMARY KEY (`Id`);
+
+--
 -- Indexes for table `users`
 --
 ALTER TABLE `users`
@@ -128,6 +155,12 @@ ALTER TABLE `__efmigrationshistory`
 --
 ALTER TABLE `rooms`
   MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT for table `roomtasks`
+--
+ALTER TABLE `roomtasks`
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `users`
