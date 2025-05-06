@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 06, 2025 at 10:11 PM
+-- Generation Time: May 06, 2025 at 11:58 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -29,6 +29,7 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `bookings` (
   `Id` int(11) NOT NULL,
+  `userid` int(11) NOT NULL,
   `CheckInDate` date DEFAULT NULL,
   `CheckOutDate` date DEFAULT NULL,
   `Guest` int(11) DEFAULT NULL,
@@ -49,14 +50,30 @@ CREATE TABLE `bookings` (
 -- Dumping data for table `bookings`
 --
 
-INSERT INTO `bookings` (`Id`, `CheckInDate`, `CheckOutDate`, `Guest`, `RoomType`, `FullName`, `Email`, `PhoneNumber`, `Address`, `SpecialRequests`, `PaymentMethod`, `PaymentStatus`, `TotalAmount`, `Status`, `CreatedAt`) VALUES
-(1, '2025-05-08', '2025-05-10', 1, 'Standard', 'cristian torrejos', 'cristiantorrejos@gmail.com', '0912312312312', 'blk 30 lot 8 ', 'asda', 'Credit Card', 'Pending', 4000.00, 'Pending', '2025-05-07 02:43:04'),
-(2, '2025-05-08', '2025-05-10', 1, 'Standard', 'james racal', 'lbjames@gmail.com', '0912312312312', 'mabolo', 'nagkaon naka lab', 'Credit Card', 'Pending', 4000.00, 'Pending', '2025-05-07 02:47:26'),
-(3, '2025-05-06', '2025-05-10', 3, 'Standard', 'leclerc', 'leclerc@gmail.com', '0912312312312', 'USA', '1111', 'PayPal', 'Pending', 8000.00, 'Pending', '2025-05-07 03:44:32'),
-(4, '2025-05-07', '2025-05-09', 4, 'deluxe', 'cristian torrejos', 'cristian@gmail.com', '0912312312312', 'blk 30 lot 8 ', 'asdsad', 'PayPal', 'Pending', 0.00, 'Pending', '2025-05-07 03:51:32'),
-(5, '2025-05-10', '2025-05-20', 2, 'Suite', 'cristian torrejos', 'cristian@gmail.com', '0912312312312', 'blk 30 lot 8 ', 'popopipi', 'Credit Card', 'Pending', 35000.00, 'Pending', '2025-05-07 03:53:27'),
-(6, '2025-05-09', '2025-05-17', 3, 'Standard', 'cristian torrejos', 'cristiantorrejos@gmail.com', '0912312312312', 'blk 30 lot 8 ', 'asdasd', 'Credit Card', 'Pending', 16000.00, 'Pending', '2025-05-07 04:05:34'),
-(7, '2025-05-08', '2025-05-17', 8, 'Standard', 'cristian torrejos', 'cristiantorrejos@gmail.com', '0912312312312', 'mabolo', 'sadasd', 'Credit Card', 'Pending', 18000.00, 'Pending', '2025-05-07 04:08:24');
+INSERT INTO `bookings` (`Id`, `userid`, `CheckInDate`, `CheckOutDate`, `Guest`, `RoomType`, `FullName`, `Email`, `PhoneNumber`, `Address`, `SpecialRequests`, `PaymentMethod`, `PaymentStatus`, `TotalAmount`, `Status`, `CreatedAt`) VALUES
+(1, 3, '2025-05-08', '2025-05-10', 1, 'Standard', 'cristian torrejos', 'cristiantorrejos@gmail.com', '0912312312312', 'blk 30 lot 8 ', 'asda', 'Credit Card', 'Pending', 4000.00, 'Pending', '2025-05-07 02:43:04'),
+(8, 22, '2025-05-10', '2025-05-17', 1, 'Suite', 'leclerc', 'leclerc@gmail.com', '0912312312312', 'USA', 'adasd', 'Credit Card', 'Pending', 24500.00, 'Pending', '2025-05-07 05:54:55'),
+(9, 21, '2025-05-07', '2025-05-10', 2, 'Deluxe', 'james racal', 'lbjames@gmail.com', '0912312312312', 'mabolo', 'asdasdasdsad', 'PayPal', 'Pending', 8400.00, 'Pending', '2025-05-07 05:55:39');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `contactus`
+--
+
+CREATE TABLE `contactus` (
+  `Contid` int(11) NOT NULL,
+  `name` text NOT NULL,
+  `email` text NOT NULL,
+  `message` varchar(2555) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `contactus`
+--
+
+INSERT INTO `contactus` (`Contid`, `name`, `email`, `message`) VALUES
+(1, 'Cristian H. Torrejos', 'cristiantorrejos03@gmail.com', 'ako to si natoy');
 
 -- --------------------------------------------------------
 
@@ -77,7 +94,7 @@ CREATE TABLE `rooms` (
 
 INSERT INTO `rooms` (`Id`, `Name`, `Price`, `ImageUrl`) VALUES
 (1, 'Standard Room', 2350.00, '/img/room3.svg'),
-(2, 'Double Room', 3.00, '/img/room4.svg'),
+(2, 'Double Room', 5000.00, '/img/room4.svg'),
 (3, 'Double Deluxe Room', 6927.00, '/img/room1.svg'),
 (4, 'Presidential Suite', 50000.00, '/img/room2.svg');
 
@@ -168,6 +185,12 @@ ALTER TABLE `bookings`
   ADD PRIMARY KEY (`Id`);
 
 --
+-- Indexes for table `contactus`
+--
+ALTER TABLE `contactus`
+  ADD PRIMARY KEY (`Contid`);
+
+--
 -- Indexes for table `rooms`
 --
 ALTER TABLE `rooms`
@@ -199,7 +222,13 @@ ALTER TABLE `__efmigrationshistory`
 -- AUTO_INCREMENT for table `bookings`
 --
 ALTER TABLE `bookings`
-  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+
+--
+-- AUTO_INCREMENT for table `contactus`
+--
+ALTER TABLE `contactus`
+  MODIFY `Contid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `rooms`
