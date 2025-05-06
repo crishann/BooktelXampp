@@ -40,6 +40,19 @@ public class UserDashController : Controller
             bookingModel.RoomType = RoomType;
         }
 
+
+        if (CheckInDate.HasValue && CheckOutDate.HasValue && Guest.HasValue && !string.IsNullOrEmpty(RoomType))
+        {
+            var booking = new Booking
+            {
+                CheckInDate = CheckInDate.Value,
+                CheckOutDate = CheckOutDate.Value,
+                Guest = Guest.Value,
+                RoomType = RoomType
+            };
+
+            ViewBag.BookingDetails = booking; // Pass booking details to view
+        }
         // Specify the full path to the BookingForm view
         return View("~/Views/Booking/BookingForm.cshtml", bookingModel);
     }

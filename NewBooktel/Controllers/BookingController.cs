@@ -2,6 +2,7 @@
 using NewBooktel.Data;
 using NewBooktel.Models;
 using System;
+using System.Security.Claims;
 
 namespace NewBooktel.Controllers
 {
@@ -19,6 +20,15 @@ namespace NewBooktel.Controllers
         {
             try
             {
+                // 🟡 Retrieve the logged-in user's ID (from claims)
+                string userIdStr = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                if (string.IsNullOrEmpty(userIdStr))
+                {
+                    ModelState.AddModelError("", "User is not logged in.");
+                    return View("~/Views/Booking/BookingForm.cshtml");
+                }
+                int userId = int.Parse(userIdStr); // Parse the user ID from the claim
+
                 // 🟡 Retrieve form values
                 DateTime checkInDate = DateTime.Parse(Request.Form["CheckInDate"]);
                 DateTime checkOutDate = DateTime.Parse(Request.Form["CheckOutDate"]);
@@ -53,6 +63,7 @@ namespace NewBooktel.Controllers
                 // 🟢 Create booking object
                 var booking = new Booking
                 {
+                    UserId = userId, // Use the logged-in user's ID
                     CheckInDate = checkInDate,
                     CheckOutDate = checkOutDate,
                     Guest = guest,
@@ -63,6 +74,7 @@ namespace NewBooktel.Controllers
                     Address = address,
                     SpecialRequests = specialRequests,
                     PaymentMethod = paymentMethod,
+                    PaymentStatus = "Pending",
                     TotalAmount = totalAmount,
                     Status = "Pending",
                     CreatedAt = DateTime.Now

@@ -5,12 +5,42 @@ using System.Collections.Generic;
 using System.Globalization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
+using MySqlConnector;
+using NewBooktel.Models;
 
 [Authorize(Roles = "admin")] // ✅ Restrict Access to Admins Only using Attribute
 public class AdminController : Controller
 {
     // ✅ Removed the manual IsAdmin check as [Authorize] handles it
+    private readonly string connectionString = "server=localhost;database=bookteldb;user=root;password=;";
 
+    public async Task<IActionResult> Feedback()
+    {
+        var feedbackList = new List<ContactUs>();
+
+        using (var connection = new MySqlConnection(connectionString))
+        {
+            await connection.OpenAsync();
+            string query = "SELECT * FROM contactus";
+
+            using (var cmd = new MySqlCommand(query, connection))
+            using (var reader = await cmd.ExecuteReaderAsync())
+            {
+                while (await reader.ReadAsync())
+                {
+                    feedbackList.Add(new ContactUs
+                    {
+                        Contid = reader.GetInt32("Contid"),
+                        Name = reader.GetString("name"),
+                        Email = reader.GetString("email"),
+                        Message = reader.GetString("message")
+                    });
+                }
+            }
+        }
+
+        return View(feedbackList);
+    }
     public IActionResult AdminIndex()
     {
         ViewBag.RoomTypes = 3;
@@ -57,11 +87,60 @@ public class AdminController : Controller
 
         return View();
     }
+    private readonly string _connectionString;
 
-    public IActionResult BookingReq()
+    public AdminController(IConfiguration configuration)
     {
-        return View();
+        // Get the connection string from appsettings.json
+        _connectionString = configuration.GetConnectionString("DefaultConnection");
     }
+    public async Task<IActionResult> BookingReq()
+    {
+        List<Booking> bookings = new List<Booking>();
+
+        // Connect to the database
+        using (var connection = new MySqlConnection(_connectionString))
+        {
+            await connection.OpenAsync();
+
+            // Query to retrieve data from the 'bookings' table
+            var query = "SELECT * FROM bookings";
+
+            // Create the command and execute it
+            using var cmd = new MySqlCommand(query, connection);
+            using var reader = await cmd.ExecuteReaderAsync();
+
+            // Loop through the results and map them to the Booking model
+            while (await reader.ReadAsync())
+            {
+                bookings.Add(new Booking
+                {
+                    Id = Convert.ToInt32(reader["Id"]),
+                    CheckInDate = Convert.ToDateTime(reader["CheckInDate"]),
+                    CheckOutDate = Convert.ToDateTime(reader["CheckOutDate"]),
+                    Guest = Convert.ToInt32(reader["Guest"]),
+                    RoomType = reader["RoomType"].ToString(),
+                    FullName = reader["FullName"].ToString(),
+                    Email = reader["Email"].ToString(),
+                    PhoneNumber = reader["PhoneNumber"].ToString(),
+                    Address = reader["Address"].ToString(),
+                    SpecialRequests = reader["SpecialRequests"].ToString(),
+                    PaymentMethod = reader["PaymentMethod"].ToString(),
+                    PaymentStatus = reader["PaymentStatus"].ToString(),
+                    TotalAmount = Convert.ToDecimal(reader["TotalAmount"]),
+                    Status = reader["Status"].ToString(),
+                    CreatedAt = Convert.ToDateTime(reader["CreatedAt"])
+                });
+            }
+        }
+
+        return View("~/Views/Admin/BookingReq.cshtml", bookings);
+    }
+
+    //public IActionResult Feedback()
+    //{
+    //    return View();
+    //}
 
     public IActionResult Checkin()
     {

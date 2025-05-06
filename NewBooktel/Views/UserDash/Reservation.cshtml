@@ -170,8 +170,24 @@
             </div>
 
             <div class="invoice-section">
-                <p>No booking made yet</p>
+                @if (ViewBag.BookingDetails != null)
+                {
+                    var details = (NewBooktel.Models.Booking)ViewBag.BookingDetails;
+                    <div>
+                        <h5 class="text-center">Booking Invoice</h5>
+                        <hr />
+                        <p><strong>Check-in:</strong> @details.CheckInDate?.ToShortDateString()</p>
+                        <p><strong>Check-out:</strong> @details.CheckOutDate?.ToShortDateString()</p>
+                        <p><strong>Guests:</strong> @details.Guest</p>
+                        <p><strong>Room Type:</strong> @details.RoomType</p>
+                    </div>
+                }
+                else
+                {
+                    <p>No booking made yet</p>
+                }
             </div>
+
         </div>
     </div>
 

@@ -1,44 +1,33 @@
-﻿@model List<NewBooktel.Models.Booking>
+﻿@model List<NewBooktel.Models.ContactUs>
 
 @{
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
-    ViewData["Title"] = "Booking Requests";
+    ViewData["Title"] = "User Feedback";
 }
 
 <div class="container mt-5">
-    <h2 class="mb-4">Booking Requests</h2>
+   
 
     @if (Model != null && Model.Count > 0)
     {
         <div class="table-responsive">
             <table class="table table-hover">
-                <thead class="booktel-header-bg text-white">
+                <thead class="booktel-header-bg">
                     <tr>
-                        <th scope="col">Id</th>
-                        <th scope="col">CheckIn Date</th>
-                        <th scope="col">CheckOut Date</th>
-                        <th scope="col">Guest</th>
-                        <th scope="col">RoomType</th>
-                        <th scope="col">FullName</th>
-                        <th scope="col">Email</th>
-                        <th scope="col">PaymentStatus</th>
-                        <th scope="col">Status</th>
+                       
+                        <th scope="col" class="border-0">Name</th>
+                        <th scope="col" class="border-0">Email</th>
+                        <th scope="col" class="border-0">Message</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var booking in Model)
+                    @foreach (var item in Model)
                     {
                         <tr>
-                            <td>@booking.Id</td>
-                            <td>@booking.CheckInDate?.ToString("yyyy-MM-dd")</td>
-                            <td>@booking.CheckOutDate?.ToString("yyyy-MM-dd")</td>
-
-                            <td>@booking.Guest</td>
-                            <td>@booking.RoomType</td>
-                            <td>@booking.FullName</td>
-                            <td>@booking.Email</td>
-                            <td>@booking.PaymentStatus</td>
-                            <td>@booking.Status</td>
+                           
+                            <td class="border-0">@item.Name</td>
+                            <td class="border-0"><a href="mailto:@item.Email" class="text-decoration-none">@item.Email</a></td>
+                            <td class="border-0" style="white-space: pre-line;">@item.Message</td>
                         </tr>
                     }
                 </tbody>
@@ -48,7 +37,7 @@
     else
     {
         <div class="alert alert-light" role="alert">
-            No booking requests available.
+            No user feedback available.
         </div>
     }
 </div>
@@ -62,16 +51,14 @@
         overflow: hidden;
     }
 
-        .table th, .table td {
+        .table th,
+        .table td {
             padding: 1rem;
             text-align: left;
         }
 
-    .booktel-header-bg {
+    .booktel-header-bg th {
         background-color: #00163a !important;
-    }
-
-    .text-white {
         color: #ffffff !important;
     }
 
