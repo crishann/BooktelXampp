@@ -1,102 +1,91 @@
-﻿@{
+﻿@model NewBooktel.Models.HousekeepingViewModel
+@{
     Layout = "~/Views/Shared/_HKeepingLayout.cshtml";
     ViewData["Title"] = "Housekeeping - Staff Panel";
 }
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewData["Title"] - Housekeeping Dashboard</title>
+<h1>Housekeeping Dashboard</h1>
 
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-
-    <style>
-        body {
-            background-color: #f8f9fa;
-        }
-
-        .sidebar {
-            width: 250px;
-            height: 100vh;
-            background: #00163a;
-            color: white;
-            padding: 20px;
-            position: fixed;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            margin-right: 0px;
-        }
-
-        .content {
-            margin-left: 260px;
-            padding: 20px;
-        }
-
-        .housekeeping-table th, .housekeeping-table td {
-            text-align: center;
-        }
-
-        .task-form {
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 5px;
-            box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
-        }
-    </style>
-</head>
-<body>
-
-    <h1 class="mb-4">Housekeeping Dashboard</h1>
-
-    <!-- Housekeeping Tasks Table for Staff -->
-    <div class="housekeeping-table mb-5">
-        <h3>Rooms to be Cleaned</h3>
-        <table class="table table-bordered">
-            <thead class="table-warning">
+<div class="housekeeping-table mb-5">
+    <h3>Rooms to be Cleaned</h3>
+    <table class="table table-bordered">
+        <thead class="table-warning">
+            <tr>
+                <th>Room Number</th>
+                <th>Status</th>
+                <th>Assigned Date</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var task in Model.PendingTasks)
+            {
                 <tr>
-                    <th>Room Number</th>
-                    <th>Status</th>
-                    <th>Assigned Date</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                <!-- Example Rows - Replace with actual data -->
-                <tr>
-                    <td>101</td>
-                    <td>Pending</td>
-                    <td>2025-04-07</td>
+                    <td>@task.RoomNumber</td>
+                    <td>@task.Status</td>
+                    <td>@task.AssignedDate.ToString("yyyy-MM-dd")</td>
                     <td>
-                        <button class="btn btn-success btn-sm" onclick="markAsCleaned(101)">Mark as Cleaned</button>
+                        @if (task.Status != "Cleaned")
+                        {
+                            <button class="btn btn-success btn-sm" onclick="markAsCleaned(@task.Id)">Mark as Cleaned</button>
+                        }
+                        else
+                        {
+                            <span class="text-success">Completed</span>
+                        }
                     </td>
                 </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<div class="housekeeping-table mb-5">
+    <h3>Completed</h3>
+    <table class="table table-bordered">
+        <thead class="table-success">
+            <tr>
+                <th>Room Number</th>
+                <th>Status</th>
+                <th>Assigned Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var task in Model.CompletedTasks)
+            {
                 <tr>
-                    <td>102</td>
-                    <td>In Progress</td>
-                    <td>2025-04-06</td>
-                    <td>
-                        <button class="btn btn-success btn-sm" onclick="markAsCleaned(102)">Mark as Cleaned</button>
-                    </td>
+                    <td>@task.RoomNumber</td>
+                    <td>@task.Status</td>
+                    <td>@task.AssignedDate.ToString("yyyy-MM-dd")</td>
                 </tr>
-                <!-- End Example Rows -->
-            </tbody>
-        </table>
-    </div>
+            }
+        </tbody>
+    </table>
+</div>
 
-    <script>
-        // Example functions for housekeeping actions
-        function markAsCleaned(roomNumber) {
-            alert("Room " + roomNumber + " has been marked as cleaned.");
-            // Implement the actual action logic here (e.g., sending an API request to update the room's status)
-        }
-    </script>
+<script>
+    function markAsCleaned(taskId) {
+        fetch('/Housekeeping/MarkAsCleaned', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: 'id=' + taskId,
+        })
+        .then(response => {
+            if (response.ok) {
+                window.location.reload();
+            } else {
+                alert('Failed to mark task as cleaned.');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('An error occurred while marking the task as cleaned.');
+        });
+    }
+</script>
 
-    <!-- Bootstrap JS -->
+@section Scripts {
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
-</body>
-</html>
+}

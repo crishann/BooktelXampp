@@ -16,6 +16,9 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
         mySqlOptions => mySqlOptions.EnableRetryOnFailure()
     ));
 
+// ✅ Register RoomTaskOperations
+builder.Services.AddScoped<RoomTaskOperations>();
+
 // ✅ Register RoomService
 builder.Services.AddScoped<RoomService>();
 
