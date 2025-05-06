@@ -1,0 +1,78 @@
+﻿@model NewBooktel.Models.Booking
+
+@{
+    ViewData["Title"] = "Booking Form";
+}
+
+<div class="container mt-5">
+    <div class="card shadow-lg rounded-4">
+        <div class="card-header bg-primary text-white text-center">
+            <h2 class="mb-0">Complete Your Booking</h2>
+        </div>
+        <div class="card-body">
+            <form asp-action="Book" asp-controller="Booking" method="post">
+                <div class="mb-3">
+                    <label asp-for="CheckInDate" class="form-label">Check-in Date</label>
+                    <input asp-for="CheckInDate" type="date" class="form-control" required />
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="CheckOutDate" class="form-label">Check-out Date</label>
+                    <input asp-for="CheckOutDate" type="date" class="form-control" required />
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Guest" class="form-label">Number of Guests</label>
+                    <input asp-for="Guest" type="number" class="form-control" required />
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="RoomType" class="form-label">Room Type</label>
+                    <input asp-for="RoomType" type="text" class="form-control" required />
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="FullName" class="form-label">Full Name</label>
+                    <input asp-for="FullName" type="text" class="form-control" required />
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Email" class="form-label">Email</label>
+                    <input asp-for="Email" type="email" class="form-control" required />
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="PhoneNumber" class="form-label">Contact Number</label>
+                    <input asp-for="PhoneNumber" type="tel" class="form-control" required />
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Address" class="form-label">Address</label>
+                    <input asp-for="Address" type="text" class="form-control" />
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="SpecialRequests" class="form-label">Special Requests</label>
+                    <textarea asp-for="SpecialRequests" class="form-control" rows="3" placeholder="Let us know your preferences..."></textarea>
+                </div>
+
+                <div class="mb-4">
+                    <label asp-for="PaymentMethod" class="form-label">Payment Method</label>
+                    <select asp-for="PaymentMethod" class="form-select" required>
+                        <option value="">-- Select Payment Method --</option>
+                        <option value="Credit Card">Credit Card</option>
+                        <option value="PayPal">PayPal</option>
+                        <option value="Cash on Arrival">Cash on Arrival</option>
+                    </select>
+                </div>
+
+                <div class="text-center">
+                    <button type="submit" class="btn btn-success px-5 py-2 fw-bold rounded-pill">
+                        <i class="bi bi-check-circle me-2"></i>Confirm Booking
+                    </button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>

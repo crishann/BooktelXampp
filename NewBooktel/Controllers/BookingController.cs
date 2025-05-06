@@ -1,23 +1,46 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using NewBooktel.Data;
 using NewBooktel.Models;
 using System;
 
-public class BookingController : Controller
+namespace NewBooktel.Controllers
 {
-    [HttpPost]
-    public IActionResult Create(Booking booking)
+    public class BookingController : Controller
     {
-        if (ModelState.IsValid)
-        {
-            // Ensure both CheckInDate and CheckOutDate have values
-            if (booking.CheckInDate.HasValue && booking.CheckOutDate.HasValue)
-            {
-                // Calculate total amount based on RoomType and dates
-                TimeSpan? duration = booking.CheckOutDate - booking.CheckInDate;
-                int nights = duration.HasValue ? duration.Value.Days : 0; // Handle potential null TimeSpan
+        private readonly ApplicationDbContext _context;
 
-                // Sample pricing logic (you can move this to a service layer)
-                decimal pricePerNight = booking.RoomType switch
+        public BookingController(ApplicationDbContext context)
+        {
+            _context = context;
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Book()
+        {
+            try
+            {
+                // 🟡 Retrieve form values
+                DateTime checkInDate = DateTime.Parse(Request.Form["CheckInDate"]);
+                DateTime checkOutDate = DateTime.Parse(Request.Form["CheckOutDate"]);
+                int guest = int.Parse(Request.Form["Guest"]);
+                string roomType = Request.Form["RoomType"];
+                string fullName = Request.Form["FullName"];
+                string email = Request.Form["Email"];
+                string phoneNumber = Request.Form["PhoneNumber"];
+                string address = Request.Form["Address"];
+                string specialRequests = Request.Form["SpecialRequests"];
+                string paymentMethod = Request.Form["PaymentMethod"];
+
+                // 🔵 Compute number of nights
+                int nights = (checkOutDate - checkInDate).Days;
+                if (nights <= 0)
+                {
+                    ModelState.AddModelError("", "Check-out date must be after check-in date.");
+                    return View("~/Views/Booking/BookingForm.cshtml");
+                }
+
+                // 🟣 Determine price per night
+                decimal pricePerNight = roomType switch
                 {
                     "Standard" => 2000,
                     "Deluxe" => 2800,
@@ -25,29 +48,46 @@ public class BookingController : Controller
                     _ => 0
                 };
 
-                booking.TotalAmount = pricePerNight * nights;
-                booking.Status = "Pending";
-                booking.CreatedAt = DateTime.Now;
+                decimal totalAmount = pricePerNight * nights;
 
-                // Save to DB (if using EF Core, inject DbContext and add here)
-                // _context.Bookings.Add(booking);
-                // _context.SaveChanges();
+                // 🟢 Create booking object
+                var booking = new Booking
+                {
+                    CheckInDate = checkInDate,
+                    CheckOutDate = checkOutDate,
+                    Guest = guest,
+                    RoomType = roomType,
+                    FullName = fullName,
+                    Email = email,
+                    PhoneNumber = phoneNumber,
+                    Address = address,
+                    SpecialRequests = specialRequests,
+                    PaymentMethod = paymentMethod,
+                    TotalAmount = totalAmount,
+                    Status = "Pending",
+                    CreatedAt = DateTime.Now
+                };
 
-                return View("~/Views/UserDash/Success.cshtml");
-                // or redirect to invoice
+                // 🔴 Save to database
+                _context.Bookings.Add(booking);
+                await _context.SaveChangesAsync();
+
+                return RedirectToAction("Success");
             }
-            else
+            catch (Exception ex)
             {
-                // Handle the case where CheckInDate or CheckOutDate is null
-                ModelState.AddModelError("", "Check-in and check-out dates are required.");
+                Console.WriteLine("❌ Booking failed: " + ex.Message);
+                ModelState.AddModelError("", "Booking failed. Please try again.");
+                return View("~/Views/Booking/BookingForm.cshtml");
             }
         }
 
-        return View(booking); // if invalid or dates are missing, re-show form with errors
-    }
+        // ✅ Success Page   
+        public IActionResult Success()
+        {
+            return View("~/Views/Booking/Success.cshtml");
+        }
 
-    public IActionResult Success()
-    {
-        return View(); // show booking success message
+
     }
 }

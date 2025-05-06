@@ -22,9 +22,7 @@ public class UserDashController : Controller
     public IActionResult Index(DateTime? CheckInDate, DateTime? CheckOutDate, int? Guest, string RoomType)
     {
         var bookingModel = new Booking { RoomType = "Default" };
-        
 
-        // Optionally, pre-populate the model with the query parameters if needed
         if (CheckInDate.HasValue)
         {
             bookingModel.CheckInDate = CheckInDate.Value;
@@ -42,7 +40,8 @@ public class UserDashController : Controller
             bookingModel.RoomType = RoomType;
         }
 
-        return View("BookingForm", bookingModel);
+        // Specify the full path to the BookingForm view
+        return View("~/Views/Booking/BookingForm.cshtml", bookingModel);
     }
 
 
