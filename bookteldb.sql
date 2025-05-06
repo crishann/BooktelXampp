@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 06, 2025 at 12:15 PM
+-- Generation Time: May 06, 2025 at 10:11 PM
 -- Server version: 10.4.32-MariaDB
--- PHP Version: 8.0.30
+-- PHP Version: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -20,6 +20,43 @@ SET time_zone = "+00:00";
 --
 -- Database: `bookteldb`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `bookings`
+--
+
+CREATE TABLE `bookings` (
+  `Id` int(11) NOT NULL,
+  `CheckInDate` date DEFAULT NULL,
+  `CheckOutDate` date DEFAULT NULL,
+  `Guest` int(11) DEFAULT NULL,
+  `RoomType` varchar(50) DEFAULT NULL,
+  `FullName` varchar(100) DEFAULT NULL,
+  `Email` varchar(100) DEFAULT NULL,
+  `PhoneNumber` varchar(50) DEFAULT NULL,
+  `Address` varchar(255) DEFAULT NULL,
+  `SpecialRequests` text DEFAULT NULL,
+  `PaymentMethod` varchar(50) DEFAULT NULL,
+  `PaymentStatus` text NOT NULL DEFAULT 'Pending',
+  `TotalAmount` decimal(10,2) DEFAULT NULL,
+  `Status` varchar(50) DEFAULT NULL,
+  `CreatedAt` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `bookings`
+--
+
+INSERT INTO `bookings` (`Id`, `CheckInDate`, `CheckOutDate`, `Guest`, `RoomType`, `FullName`, `Email`, `PhoneNumber`, `Address`, `SpecialRequests`, `PaymentMethod`, `PaymentStatus`, `TotalAmount`, `Status`, `CreatedAt`) VALUES
+(1, '2025-05-08', '2025-05-10', 1, 'Standard', 'cristian torrejos', 'cristiantorrejos@gmail.com', '0912312312312', 'blk 30 lot 8 ', 'asda', 'Credit Card', 'Pending', 4000.00, 'Pending', '2025-05-07 02:43:04'),
+(2, '2025-05-08', '2025-05-10', 1, 'Standard', 'james racal', 'lbjames@gmail.com', '0912312312312', 'mabolo', 'nagkaon naka lab', 'Credit Card', 'Pending', 4000.00, 'Pending', '2025-05-07 02:47:26'),
+(3, '2025-05-06', '2025-05-10', 3, 'Standard', 'leclerc', 'leclerc@gmail.com', '0912312312312', 'USA', '1111', 'PayPal', 'Pending', 8000.00, 'Pending', '2025-05-07 03:44:32'),
+(4, '2025-05-07', '2025-05-09', 4, 'deluxe', 'cristian torrejos', 'cristian@gmail.com', '0912312312312', 'blk 30 lot 8 ', 'asdsad', 'PayPal', 'Pending', 0.00, 'Pending', '2025-05-07 03:51:32'),
+(5, '2025-05-10', '2025-05-20', 2, 'Suite', 'cristian torrejos', 'cristian@gmail.com', '0912312312312', 'blk 30 lot 8 ', 'popopipi', 'Credit Card', 'Pending', 35000.00, 'Pending', '2025-05-07 03:53:27'),
+(6, '2025-05-09', '2025-05-17', 3, 'Standard', 'cristian torrejos', 'cristiantorrejos@gmail.com', '0912312312312', 'blk 30 lot 8 ', 'asdasd', 'Credit Card', 'Pending', 16000.00, 'Pending', '2025-05-07 04:05:34'),
+(7, '2025-05-08', '2025-05-17', 8, 'Standard', 'cristian torrejos', 'cristiantorrejos@gmail.com', '0912312312312', 'mabolo', 'sadasd', 'Credit Card', 'Pending', 18000.00, 'Pending', '2025-05-07 04:08:24');
 
 -- --------------------------------------------------------
 
@@ -63,7 +100,7 @@ CREATE TABLE `roomtasks` (
 
 INSERT INTO `roomtasks` (`Id`, `RoomNumber`, `Status`, `AssignedDate`) VALUES
 (1, 101, 'Cleaned', '2025-04-07'),
-(2, 102, 'In Progress', '2025-04-06');
+(2, 102, 'Cleaned', '2025-04-06');
 
 -- --------------------------------------------------------
 
@@ -95,7 +132,9 @@ INSERT INTO `users` (`Id`, `FirstName`, `LastName`, `ContactNumber`, `Email`, `P
 (16, 'James', 'Reyes', '09004124124', 'jamesreyes2x@gmail.com', '$2a$11$wg5uWK5oD9iBM90Dtix/xeHyZgZrY5UpxJMx1y0d5.cxXwy4hQ.Su', 'Guest', 1),
 (18, 'Admin2', 'Admin2', '09123456789', 'admin2@gmail.com', '$2a$11$ZuJeAdLi0f80xDbzwOXVHehA8gi83.Ts.O3a0y6mSeII9QFCZa2ky', 'admin', 1),
 (19, 'Housekeeping', 'housekeeping', '09123456789', 'hk@gmail.com', '$2a$11$uQZDvAVrZcTLKpgzor6t5uAxu8fWkm4Ix745qyToz6T46HgegCw3y', 'housekeeping', 1),
-(20, 'Admin', 'Admin', '09123456789', 'admin@gmail.com', '$2a$11$MG0DDKVv75/kHVqTccbIU.FnPqSMiro6GvbExmB47L1ql7qdRWrPm', 'Admin', 1);
+(20, 'Admin', 'Admin', '09123456789', 'admin@gmail.com', '$2a$11$MG0DDKVv75/kHVqTccbIU.FnPqSMiro6GvbExmB47L1ql7qdRWrPm', 'Admin', 1),
+(21, 'James', 'Raffy', '09123456789', 'lbjames@gmail.com', '$2a$11$3TRvGjd5qZP3Enpf9m447.tiPqPz.86H0UWv03Bz7hIYaR.RpHnHy', 'Guest', 1),
+(22, 'Charles', 'Leclerc', '09123456789', 'leclerc@gmail.com', '$2a$11$Ku8G1NmqGCjZt/wSBKc8lOk6TNDzCPLkMWGInN/PzzUdiiKmmUfP6', 'Guest', 1);
 
 -- --------------------------------------------------------
 
@@ -121,6 +160,12 @@ INSERT INTO `__efmigrationshistory` (`MigrationId`, `ProductVersion`) VALUES
 --
 -- Indexes for dumped tables
 --
+
+--
+-- Indexes for table `bookings`
+--
+ALTER TABLE `bookings`
+  ADD PRIMARY KEY (`Id`);
 
 --
 -- Indexes for table `rooms`
@@ -151,6 +196,12 @@ ALTER TABLE `__efmigrationshistory`
 --
 
 --
+-- AUTO_INCREMENT for table `bookings`
+--
+ALTER TABLE `bookings`
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+
+--
 -- AUTO_INCREMENT for table `rooms`
 --
 ALTER TABLE `rooms`
@@ -166,7 +217,7 @@ ALTER TABLE `roomtasks`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
