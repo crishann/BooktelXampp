@@ -18,12 +18,12 @@ namespace NewBooktel.Controllers
     public class AuthController : Controller
     {
         private readonly ApplicationDbContext _context;
-        private readonly IEmailSender _emailSender;
+        //private readonly IEmailSender _emailSender;
 
-        public AuthController(ApplicationDbContext context, IEmailSender emailSender)
+        public AuthController(ApplicationDbContext context)
         {
             _context = context ?? throw new ArgumentNullException(nameof(context));
-            _emailSender = emailSender ?? throw new ArgumentNullException(nameof(emailSender));
+            //_emailSender = emailSender ?? throw new ArgumentNullException(nameof(emailSender));
         }
 
         #region Registration Actions
@@ -43,12 +43,12 @@ namespace NewBooktel.Controllers
             FirstName = CapitalizeFirstLetter(FirstName);
             LastName = CapitalizeFirstLetter(LastName);
 
-            if (await _context.Users.AnyAsync(u => u.Email == Email))
-            {
-                Console.WriteLine("❌ Email already registered.");
-                ViewBag.ErrorMessage = "This email is already registered.";
-                return View("~/Views/Home/Register.cshtml");
-            }
+            //if (await _context.Users.AnyAsync(u => u.Email == Email))
+            //{
+            //    Console.WriteLine("❌ Email already registered.");
+            //    ViewBag.ErrorMessage = "This email is already registered.";
+            //    return View("~/Views/Home/Register.cshtml");
+            //}
 
             string hashedPassword = HashPassword(Password);
 
@@ -60,22 +60,23 @@ namespace NewBooktel.Controllers
                 Email = Email,
                 Password = hashedPassword,
                 Role = "Guest",
-                IsEmailConfirmed = false
+                IsEmailConfirmed = true // ✅ Set to true since you're skipping email confirmation
             };
 
             _context.Users.Add(newUser);
             await _context.SaveChangesAsync();
 
-            var token = Guid.NewGuid().ToString();
-            var confirmationLink = Url.Action("ConfirmEmail", "Auth",
-                new { email = newUser.Email, token = token }, Request.Scheme);
+            // ⛔ Email confirmation disabled
+            // var token = Guid.NewGuid().ToString();
+            // var confirmationLink = Url.Action("ConfirmEmail", "Auth",
+            //     new { email = newUser.Email, token = token }, Request.Scheme);
+            // await _emailSender.SendEmailAsync(newUser.Email, "Confirm Your Email",
+            //     $"Please confirm your account by <a href='{confirmationLink}'>clicking here</a>.");
 
-            await _emailSender.SendEmailAsync(newUser.Email, "Confirm Your Email",
-                $"Please confirm your account by <a href='{confirmationLink}'>clicking here</a>.");
-
-            Console.WriteLine("✅ Confirmation email sent!");
+            Console.WriteLine("✅ User registered successfully (without email confirmation)");
             return RedirectToAction("Login", "Home");
         }
+
 
         #endregion
 
@@ -163,34 +164,34 @@ namespace NewBooktel.Controllers
 
         #endregion
 
-        #region Email Confirmation
+        //#region Email Confirmation
 
-        [HttpGet]
-        public async Task<IActionResult> ConfirmEmail(string email, string token)
-        {
-            Console.WriteLine($"📌 Confirming email for {email}");
+        //[HttpGet]
+        //public async Task<IActionResult> ConfirmEmail(string email, string token)
+        //{
+        //    Console.WriteLine($"📌 Confirming email for {email}");
 
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
-            if (user == null)
-            {
-                Console.WriteLine("❌ User not found.");
-                return NotFound("User not found.");
-            }
+        //    var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+        //    if (user == null)
+        //    {
+        //        Console.WriteLine("❌ User not found.");
+        //        return NotFound("User not found.");
+        //    }
 
-            if (string.IsNullOrEmpty(token))
-            {
-                Console.WriteLine("❌ Invalid confirmation token.");
-                return BadRequest("Invalid confirmation request.");
-            }
+        //    if (string.IsNullOrEmpty(token))
+        //    {
+        //        Console.WriteLine("❌ Invalid confirmation token.");
+        //        return BadRequest("Invalid confirmation request.");
+        //    }
 
-            user.IsEmailConfirmed = true;
-            await _context.SaveChangesAsync();
+        //    user.IsEmailConfirmed = true;
+        //    await _context.SaveChangesAsync();
 
-            Console.WriteLine("✅ Email confirmed successfully!");
-            return View("EmailConfirmed");
-        }
+        //    Console.WriteLine("✅ Email confirmed successfully!");
+        //    return View("EmailConfirmed");
+        //}
 
-        #endregion
+        //#endregion
 
         #region Helper Methods
 
