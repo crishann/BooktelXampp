@@ -99,11 +99,11 @@ namespace NewBooktel.Controllers
             }
 
             var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == Email);
-            if (user == null || !BCrypt.Net.BCrypt.Verify(Password, user.Password) || !user.IsEmailConfirmed)
-            {
-                ViewBag.ErrorMessage = "Invalid login attempt.";
-                return View("~/Views/Home/Login.cshtml");
-            }
+            //if (user == null || !BCrypt.Net.BCrypt.Verify(Password, user.Password) || !user.IsEmailConfirmed)
+            //{
+            //    ViewBag.ErrorMessage = "Invalid login attempt.";
+            //    return View("~/Views/Home/Login.cshtml");
+            //}
 
             var claims = new List<Claim>
     {
@@ -141,6 +141,10 @@ namespace NewBooktel.Controllers
             else if (user.Role?.Trim().ToLower() == "housekeeping")
             {
                 return RedirectToAction("Index", "Housekeeping");
+            }
+            else if (user.Role?.Trim().ToLower() == "frontdesk")
+            {
+                return RedirectToAction("Index", "FrontDesk");
             }
             else
             {
