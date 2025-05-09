@@ -1,19 +1,79 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
+﻿@{
     var currentAction = ViewContext.RouteData.Values["Action"]?.ToString() ?? "";
 }
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"] - Front Desk Panel</title>
 
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+
+        .sidebar {
+            width: 250px;
+            height: 100vh;
+            background: #00163a;
+            color: white;
+            padding: 20px;
+            position: fixed;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .content {
+            margin-left: 260px;
+            padding: 20px;
+        }
+
+        .logout-btn {
+            background: #dc3545;
+            color: white;
+            border: none;
+            width: 100%;
+            padding: 10px;
+            text-align: center;
+            font-weight: bold;
+            border-radius: 5px;
+            margin-top: auto;
+        }
+
+            .logout-btn:hover {
+                background: #c82333;
+                color: white;
+            }
+
+        .nav-link.active {
+            background-color: #f8f9fa;
+            color: black !important;
+            border-top-right-radius: 20px;
+            border-bottom-right-radius: 20px;
+            padding-left: 15px;
+            padding-top: 8px;
+            padding-bottom: 8px;
+            margin-right: 0;
+            overflow: hidden;
+            white-space: nowrap;
+        }
+    </style>
+</head>
 <body>
+
     <!-- Sidebar -->
     <div class="sidebar">
         <div>
             <h3>Front Desk Panel</h3>
             <ul class="nav flex-column">
                 <li class="nav-item">
-                    <a class="nav-link text-white @(currentAction == "Dashboard" ? "active" : "")"
-                       asp-controller="FrontDesk" asp-action="index">Dashboard</a>
+                    <a class="nav-link text-white @(currentAction == "Index" ? "active" : "")"
+                       asp-controller="FrontDesk" asp-action="Index">Dashboard</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link text-white @(currentAction == "CheckIn" ? "active" : "")"
@@ -24,16 +84,16 @@
                        asp-controller="FrontDesk" asp-action="CheckOut">Check-Out</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-white @(currentAction == "Reservations" ? "active" : "")"
-                       asp-controller="FrontDesk" asp-action="Reservations">Reservations</a>
+                    <a class="nav-link text-white @(currentAction == "Reservation" ? "active" : "")"
+                       asp-controller="FrontDesk" asp-action="Reservation">Reservations</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-white @(currentAction == "Guests" ? "active" : "")"
-                       asp-controller="FrontDesk" asp-action="Guests">Guests</a>
+                    <a class="nav-link text-white @(currentAction == "Guest" ? "active" : "")"
+                       asp-controller="FrontDesk" asp-action="Guest">Guests</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-white @(currentAction == "Payments" ? "active" : "")"
-                       asp-controller="FrontDesk" asp-action="Payments">Payments</a>
+                    <a class="nav-link text-white @(currentAction == "Payment" ? "active" : "")"
+                       asp-controller="FrontDesk" asp-action="Payment">Payments</a>
                 </li>
             </ul>
         </div>
@@ -51,4 +111,6 @@
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
 </body>
+</html>
