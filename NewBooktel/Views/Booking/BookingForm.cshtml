@@ -28,7 +28,13 @@
 
                 <div class="mb-3">
                     <label asp-for="RoomType" class="form-label">Room Type</label>
-                    <input asp-for="RoomType" type="text" class="form-control" required />
+                    <select asp-for="RoomType" class="form-select" required>
+                        <option value="Standard Room">Standard Room</option>
+                        <option value="Double Room">Double Room</option>
+                        <option value="Double Deluxe Room">Double Deluxe Room</option>
+                        <option value="Suite">Suite</option>
+                        <option value="Presidential Suite">Presidential Suite</option>
+                    </select>
                 </div>
 
                 <div class="mb-3">
