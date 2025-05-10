@@ -1,0 +1,59 @@
+﻿@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    ViewData["Title"] = "Special Offers - Admin Panel";
+}
+
+<h2>Special Offers Management</h2>
+
+<p>This is the Special Offers section where you can manage promotional deals, discounts, packages, etc.</p>
+
+<div class="card mb-3">
+    <div class="card-header">
+        Add New Special Offer
+    </div>
+    <div class="card-body">
+        <form asp-action="SpecialOffers" method="post">
+            <div class="mb-3">
+                <label class="form-label">Offer Title</label>
+                <input type="text" name="title" class="form-control" required />
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Description</label>
+                <textarea name="description" class="form-control"></textarea>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Discount (%)</label>
+                <input type="number" step="0.01" name="discountPercent" class="form-control" required />
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Start Date</label>
+                <input type="date" name="startDate" class="form-control" />
+            </div>
+            <div class="mb-3">
+                <label class="form-label">End Date</label>
+                <input type="date" name="endDate" class="form-control" />
+            </div>
+            <div class="mb-3 form-check">
+                <input type="checkbox" name="isActive" value="true" class="form-check-input" id="isActiveCheck" checked />
+                <label class="form-check-label" for="isActiveCheck">Is Active</label>
+            </div>
+            <button type="submit" class="btn btn-primary">Save Offer</button>
+        </form>
+    </div>
+</div>
+
+<h3>Current Offers</h3>
+<ul class="list-group">
+    @foreach (var offer in Model)
+    {
+        <li class="list-group-item">
+            <strong>@offer.Title</strong> - @offer.Description
+            <br />
+            <small>
+                Discount: @offer.DiscountPercent% |
+                @(offer.IsActive ? "Active" : "Inactive") |
+                Valid: @(offer.StartDate?.ToShortDateString() ?? "N/A") to @(offer.EndDate?.ToShortDateString() ?? "N/A")
+            </small>
+        </li>
+    }
+</ul>

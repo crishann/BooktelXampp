@@ -103,25 +103,29 @@
                 </tr>
             </thead>
             <tbody>
-                <!-- Example Rows - Replace with actual data -->
-                <tr>
-                    <td>101</td>
-                    <td>Pending</td>
-                    <td>2025-04-07</td>
-                    <td>
-                        <button class="btn btn-success btn-sm">Mark as In Progress</button>
-                        <button class="btn btn-danger btn-sm">Cancel</button>
-                    </td>
-                </tr>
-                <tr>
-                    <td>102</td>
-                    <td>In Progress</td>
-                    <td>2025-04-06</td>
-                    <td>
-                        <button class="btn btn-warning btn-sm">Mark as Completed</button>
-                    </td>
-                </tr>
-                <!-- End Example Rows -->
+                @foreach (var task in Model)
+                {
+                    <tr>
+                        <td>@task.RoomNumber</td>
+                        <td>@task.Status</td>
+                        <td>@task.AssignedDate.ToShortDateString()</td>
+                        <td>
+                            <form asp-action="UpdateTaskStatus" method="post" style="display:inline;">
+                                <input type="hidden" name="id" value="@task.Id" />
+
+                                @if (task.Status == "Pending")
+                                {
+                                    <button type="submit" name="newStatus" value="In Progress" class="btn btn-success btn-sm">Mark as In Progress</button>
+                                    <button type="submit" name="newStatus" value="Cancelled" class="btn btn-danger btn-sm">Cancel</button>
+                                }
+                                else if (task.Status == "In Progress")
+                                {
+                                    <button type="submit" name="newStatus" value="Cleaned" class="btn btn-warning btn-sm">Mark as Completed</button>
+                                }
+                            </form>
+                        </td>
+                    </tr>
+                }
             </tbody>
         </table>
     </div>

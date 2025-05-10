@@ -55,9 +55,9 @@ public class AdminController : Controller
     }
     public IActionResult AdminIndex()
     {
-        ViewBag.RoomTypes = 3;
-        ViewBag.NewBookings = 11;
-        ViewBag.ConfirmedBookings = 0;
+        ViewBag.RoomTypes = _context.Rooms.Count();
+        ViewBag.NewBookings = _context.Bookings.Count(b => b.Status == "Pending");
+        ViewBag.ConfirmedBookings = _context.Bookings.Count(b => b.PaymentStatus == "paid");
         ViewBag.SpecialOffers = 0;
 
         // ✅ Use ParseExact to prevent FormatException
@@ -114,7 +114,7 @@ public class AdminController : Controller
             await connection.OpenAsync();
 
             // Query to retrieve data from the 'bookings' table
-            var query = "SELECT * FROM bookings";
+            var query = "SELECT * FROM bookings WHERE Status = 'Pending'";
             using var cmd = new MySqlCommand(query, connection);
             using var reader = await cmd.ExecuteReaderAsync();
 
@@ -327,15 +327,43 @@ public class AdminController : Controller
         return View();
     }
 
+    // yawa na 
+    [HttpGet]
     public IActionResult Housekeeping()
     {
-        return View();
+        var tasks = _context.RoomTasks.ToList();
+        return View(tasks);
     }
 
-    public IActionResult Payment()
+    [HttpPost]
+    public IActionResult AssignHousekeepingTask(int roomNumber, string status)
     {
-        return View();
+        var task = new RoomTask
+        {
+            RoomNumber = roomNumber,
+            Status = status,
+            AssignedDate = DateTime.Today
+        };
+
+        _context.RoomTasks.Add(task);
+        _context.SaveChanges();
+
+        return RedirectToAction("Housekeeping");
     }
+
+    [HttpPost]
+    public IActionResult UpdateTaskStatus(int id, string newStatus)
+    {
+        var task = _context.RoomTasks.Find(id);
+        if (task != null)
+        {
+            task.Status = newStatus;
+            _context.SaveChanges();
+        }
+
+        return RedirectToAction("Housekeeping");
+    }
+
 
     public IActionResult Rooms()
     {
@@ -344,8 +372,49 @@ public class AdminController : Controller
     }
 
 
-  
 
+    // new
+    public IActionResult Payment()
+    {
+        var confirmedBookings = _context.Bookings
+                                       .Where(b => b.PaymentStatus == "Paid")
+                                       .ToList();
+        return View(confirmedBookings);
+    }
+
+
+
+    // SPECIAL OFFER
+    [HttpGet]
+    public IActionResult SpecialOffers()
+    {
+        var offers = _context.SpecialOffers.ToList();
+        return View(offers);
+    }
+
+    [HttpPost]
+    public IActionResult SpecialOffers(string title, string description, decimal discountPercent, DateTime? startDate, DateTime? endDate, bool isActive)
+    {
+        var offer = new SpecialOffer
+        {
+            Title = title,
+            Description = description,
+            DiscountPercent = discountPercent,
+            StartDate = startDate,
+            EndDate = endDate,
+            IsActive = isActive,
+            CreatedAt = DateTime.Now
+        };
+
+        _context.SpecialOffers.Add(offer);
+        _context.SaveChanges();
+
+        return RedirectToAction("SpecialOffers");
+    }
+
+    /// <summary>
+    /// </summary>
+    /// <returns></returns>
 
     public IActionResult AddRoom()
     {

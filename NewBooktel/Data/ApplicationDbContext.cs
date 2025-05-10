@@ -10,7 +10,8 @@ namespace NewBooktel.Data
         // Define DbSet properties for each model
         public DbSet<User> Users { get; set; }
         public DbSet<Room> Rooms { get; set; }
-      
+
+        public DbSet<SpecialOffer> SpecialOffers { get; set; }
         public DbSet<Booking> Bookings { get; set; }
         public DbSet<RoomTask> RoomTasks { get; set; }
        
