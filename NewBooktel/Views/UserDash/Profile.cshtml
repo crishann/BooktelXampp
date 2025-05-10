@@ -114,6 +114,7 @@
                                 <tr>
                                     <th>Booking ID</th>
                                     <th>Room Type</th>
+                                    <th>Room Number</th>
                                     <th>Dates</th>
                                     <th>Status</th>
                                     <th>Total Amount</th>
@@ -125,6 +126,7 @@
                                     <tr>
                                         <td>@booking.Id</td>
                                         <td>@booking.RoomType</td>
+										<td>@booking.room_num</td>
                                         <td>
                                             @(booking.CheckInDate?.ToString("MMM dd")) -
                                             @(booking.CheckOutDate?.ToString("MMM dd"))

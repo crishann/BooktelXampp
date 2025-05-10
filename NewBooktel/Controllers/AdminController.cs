@@ -212,11 +212,10 @@ public class AdminController : Controller
         return View(viewModel);
     }
 
-
     [HttpPost]
     public IActionResult ApproveBooking(int bookingId, int room_number)
     {
-        Console.WriteLine($"Booking ID: {bookingId}, Room Number: {room_number}");  // Add this for debugging
+        Console.WriteLine($"Booking ID: {bookingId}, Room Number: {room_number}");  // Debug log
 
         var booking = _context.Bookings.FirstOrDefault(b => b.Id == bookingId);
         if (booking == null)
@@ -232,6 +231,7 @@ public class AdminController : Controller
 
         booking.Status = "Approved";
         booking.Room_id = room.Id;
+        booking.room_num = room.room_number; // ✅ Assign the actual room number to booking
 
         room.status = RoomStatus.Occupied;
 
@@ -239,6 +239,7 @@ public class AdminController : Controller
 
         return RedirectToAction("BookingReq");
     }
+
 
 
 
