@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 09, 2025 at 11:04 PM
+-- Generation Time: May 10, 2025 at 02:49 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -52,9 +52,7 @@ CREATE TABLE `bookings` (
 --
 
 INSERT INTO `bookings` (`Id`, `userid`, `room_id`, `CheckInDate`, `CheckOutDate`, `Guest`, `RoomType`, `FullName`, `Email`, `PhoneNumber`, `Address`, `SpecialRequests`, `PaymentMethod`, `PaymentStatus`, `TotalAmount`, `Status`, `CreatedAt`) VALUES
-(1, 3, NULL, '2025-05-08', '2025-05-10', 1, 'Standard', 'cristian torrejos', 'cristiantorrejos@gmail.com', '0912312312312', 'blk 30 lot 8 ', 'asda', 'Credit Card', 'Pending', 4000.00, 'Pending', '2025-05-07 02:43:04'),
-(8, 22, NULL, '2025-05-10', '2025-05-17', 1, 'Suite', 'leclerc', 'leclerc@gmail.com', '0912312312312', 'USA', 'adasd', 'Credit Card', 'Pending', 24500.00, 'Pending', '2025-05-07 05:54:55'),
-(9, 21, NULL, '2025-05-07', '2025-05-10', 2, 'Deluxe', 'james racal', 'lbjames@gmail.com', '0912312312312', 'mabolo', 'asdasdasdsad', 'PayPal', 'Pending', 8400.00, 'Pending', '2025-05-07 05:55:39');
+(9, 21, 3, '2025-05-07', '2025-05-10', 2, 'Double Deluxe Room', 'james racal', 'lbjames@gmail.com', '0912312312312', 'mabolo', 'asdasdasdsad', 'PayPal', 'Pending', 8400.00, 'Approved', '2025-05-07 05:55:39');
 
 -- --------------------------------------------------------
 
@@ -129,10 +127,10 @@ CREATE TABLE `payments` (
 
 CREATE TABLE `rooms` (
   `Id` int(11) NOT NULL,
-  `room_number` varchar(10) NOT NULL,
+  `room_number` int(10) NOT NULL,
   `Name` varchar(255) NOT NULL,
   `Price` decimal(10,2) NOT NULL,
-  `status` enum('available','occupied','maintenance') DEFAULT 'available',
+  `status` varchar(250) DEFAULT 'available',
   `ImageUrl` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -141,46 +139,56 @@ CREATE TABLE `rooms` (
 --
 
 INSERT INTO `rooms` (`Id`, `room_number`, `Name`, `Price`, `status`, `ImageUrl`) VALUES
-(1, '101', 'Standard Room', 2350.00, 'available', '/img/room3.svg'),
-(2, '102', 'Double Room', 5000.00, 'available', '/img/room4.svg'),
-(3, '103', 'Double Deluxe Room', 6927.00, 'available', '/img/room1.svg'),
-(4, '104', 'Presidential Suite', 50000.00, 'available', '/img/room2.svg'),
-(5, '105', 'Standard Room', 2350.00, 'available', '/img/room3.svg'),
-(6, '106', 'Standard Room', 2350.00, 'available', '/img/room3.svg'),
-(7, '107', 'Standard Room', 2350.00, 'available', '/img/room3.svg'),
-(8, '108', 'Standard Room', 2350.00, 'available', '/img/room3.svg'),
-(9, '109', 'Standard Room', 2350.00, 'available', '/img/room3.svg'),
-(10, '110', 'Standard Room', 2350.00, 'available', '/img/room3.svg'),
-(11, '111', 'Standard Room', 2350.00, 'available', '/img/room3.svg'),
-(12, '112', 'Standard Room', 2350.00, 'available', '/img/room3.svg'),
-(13, '113', 'Standard Room', 2350.00, 'available', '/img/room3.svg'),
-(14, '114', 'Double Room', 5000.00, 'available', '/img/room4.svg'),
-(15, '115', 'Double Room', 5000.00, 'available', '/img/room4.svg'),
-(16, '116', 'Double Room', 5000.00, 'available', '/img/room4.svg'),
-(17, '117', 'Double Room', 5000.00, 'available', '/img/room4.svg'),
-(18, '118', 'Double Room', 5000.00, 'available', '/img/room4.svg'),
-(19, '119', 'Double Room', 5000.00, 'available', '/img/room4.svg'),
-(20, '120', 'Double Room', 5000.00, 'available', '/img/room4.svg'),
-(21, '121', 'Double Room', 5000.00, 'available', '/img/room4.svg'),
-(22, '122', 'Double Room', 5000.00, 'available', '/img/room4.svg'),
-(23, '132', 'Double Deluxe Room', 6927.00, 'available', '/img/room1.svg'),
-(24, '133', 'Double Deluxe Room', 6927.00, 'available', '/img/room1.svg'),
-(25, '134', 'Double Deluxe Room', 6927.00, 'available', '/img/room1.svg'),
-(26, '135', 'Double Deluxe Room', 6927.00, 'available', '/img/room1.svg'),
-(27, '136', 'Double Deluxe Room', 6927.00, 'available', '/img/room1.svg'),
-(28, '137', 'Double Deluxe Room', 6927.00, 'available', '/img/room1.svg'),
-(29, '138', 'Double Deluxe Room', 6927.00, 'available', '/img/room1.svg'),
-(30, '139', 'Double Deluxe Room', 6927.00, 'available', '/img/room1.svg'),
-(31, '140', 'Double Deluxe Room', 6927.00, 'available', '/img/room1.svg'),
-(32, '141', 'Presidential Suite', 50000.00, 'available', '/img/room2.svg'),
-(33, '142', 'Presidential Suite', 50000.00, 'available', '/img/room2.svg'),
-(34, '143', 'Presidential Suite', 50000.00, 'available', '/img/room2.svg'),
-(35, '144', 'Presidential Suite', 50000.00, 'available', '/img/room2.svg'),
-(36, '145', 'Presidential Suite', 50000.00, 'available', '/img/room2.svg'),
-(37, '146', 'Presidential Suite', 50000.00, 'available', '/img/room2.svg'),
-(38, '147', 'Presidential Suite', 50000.00, 'available', '/img/room2.svg'),
-(39, '148', 'Presidential Suite', 50000.00, 'available', '/img/room2.svg'),
-(40, '149', 'Presidential Suite', 50000.00, 'available', '/img/room2.svg');
+(1, 101, 'Standard Room', 2350.00, 'available', '/img/room3.svg'),
+(2, 102, 'Double Room', 5000.00, 'available', '/img/room4.svg'),
+(3, 103, 'Double Deluxe Room', 6927.00, 'Occupied', '/img/room1.svg'),
+(4, 104, 'Presidential Suite', 50000.00, 'available', '/img/room2.svg'),
+(5, 105, 'Standard Room', 2350.00, 'available', '/img/room3.svg'),
+(6, 106, 'Standard Room', 2350.00, 'available', '/img/room3.svg'),
+(7, 107, 'Standard Room', 2350.00, 'available', '/img/room3.svg'),
+(8, 108, 'Standard Room', 2350.00, 'available', '/img/room3.svg'),
+(9, 109, 'Standard Room', 2350.00, 'available', '/img/room3.svg'),
+(10, 110, 'Standard Room', 2350.00, 'available', '/img/room3.svg'),
+(11, 111, 'Standard Room', 2350.00, 'available', '/img/room3.svg'),
+(12, 112, 'Standard Room', 2350.00, 'available', '/img/room3.svg'),
+(13, 113, 'Standard Room', 2350.00, 'available', '/img/room3.svg'),
+(14, 114, 'Double Room', 5000.00, 'available', '/img/room4.svg'),
+(15, 115, 'Double Room', 5000.00, 'available', '/img/room4.svg'),
+(16, 116, 'Double Room', 5000.00, 'available', '/img/room4.svg'),
+(17, 117, 'Double Room', 5000.00, 'available', '/img/room4.svg'),
+(18, 118, 'Double Room', 5000.00, 'available', '/img/room4.svg'),
+(19, 119, 'Double Room', 5000.00, 'available', '/img/room4.svg'),
+(20, 120, 'Double Room', 5000.00, 'available', '/img/room4.svg'),
+(21, 121, 'Double Room', 5000.00, 'available', '/img/room4.svg'),
+(22, 122, 'Double Room', 5000.00, 'available', '/img/room4.svg'),
+(23, 132, 'Double Deluxe Room', 6927.00, 'available', '/img/room1.svg'),
+(24, 133, 'Double Deluxe Room', 6927.00, 'available', '/img/room1.svg'),
+(25, 134, 'Double Deluxe Room', 6927.00, 'available', '/img/room1.svg'),
+(26, 135, 'Double Deluxe Room', 6927.00, 'available', '/img/room1.svg'),
+(27, 136, 'Double Deluxe Room', 6927.00, 'available', '/img/room1.svg'),
+(28, 137, 'Double Deluxe Room', 6927.00, 'available', '/img/room1.svg'),
+(29, 138, 'Double Deluxe Room', 6927.00, 'available', '/img/room1.svg'),
+(30, 139, 'Double Deluxe Room', 6927.00, 'available', '/img/room1.svg'),
+(31, 140, 'Double Deluxe Room', 6927.00, 'available', '/img/room1.svg'),
+(32, 141, 'Presidential Suite', 50000.00, 'available', '/img/room2.svg'),
+(33, 142, 'Presidential Suite', 50000.00, 'available', '/img/room2.svg'),
+(34, 143, 'Presidential Suite', 50000.00, 'available', '/img/room2.svg'),
+(35, 144, 'Presidential Suite', 50000.00, 'available', '/img/room2.svg'),
+(36, 145, 'Presidential Suite', 50000.00, 'available', '/img/room2.svg'),
+(37, 146, 'Presidential Suite', 50000.00, 'available', '/img/room2.svg'),
+(38, 147, 'Presidential Suite', 50000.00, 'available', '/img/room2.svg'),
+(39, 148, 'Presidential Suite', 50000.00, 'available', '/img/room2.svg'),
+(40, 149, 'Presidential Suite', 50000.00, 'available', '/img/room2.svg'),
+(41, 201, 'Suite', 3588.00, 'available', '/img/room5.svg'),
+(42, 202, 'Suite', 3588.00, 'available', '/img/room5.svg'),
+(43, 203, 'Suite', 3588.00, 'available', '/img/room5.svg'),
+(44, 204, 'Suite', 3588.00, 'available', '/img/room5.svg'),
+(45, 205, 'Suite', 3588.00, 'available', '/img/room5.svg'),
+(46, 206, 'Suite', 3588.00, 'available', '/img/room5.svg'),
+(47, 207, 'Suite', 3588.00, 'available', '/img/room5.svg'),
+(48, 208, 'Suite', 3588.00, 'available', '/img/room5.svg'),
+(49, 209, 'Suite', 3588.00, 'available', '/img/room5.svg'),
+(50, 210, 'Suite', 3588.00, 'available', '/img/room5.svg');
 
 -- --------------------------------------------------------
 
@@ -202,6 +210,32 @@ CREATE TABLE `roomtasks` (
 INSERT INTO `roomtasks` (`Id`, `RoomNumber`, `Status`, `AssignedDate`) VALUES
 (1, 101, 'Cleaned', '2025-04-07'),
 (2, 102, 'Cleaned', '2025-04-06');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `specialoffers`
+--
+
+CREATE TABLE `specialoffers` (
+  `Id` int(11) NOT NULL,
+  `Title` varchar(255) NOT NULL,
+  `Description` text DEFAULT NULL,
+  `DiscountPercent` decimal(5,2) NOT NULL DEFAULT 0.00,
+  `StartDate` date DEFAULT NULL,
+  `EndDate` date DEFAULT NULL,
+  `IsActive` tinyint(1) NOT NULL DEFAULT 1,
+  `CreatedAt` datetime NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `specialoffers`
+--
+
+INSERT INTO `specialoffers` (`Id`, `Title`, `Description`, `DiscountPercent`, `StartDate`, `EndDate`, `IsActive`, `CreatedAt`) VALUES
+(1, 'Spring Break Discount', 'Get 10% off during spring break season.', 10.00, '2025-03-15', '2025-04-15', 1, '2025-05-10 19:25:44'),
+(2, 'Early Bird Booking', 'Book early and save 15% on your stay.', 15.00, '2025-01-01', '2025-12-31', 1, '2025-05-10 19:25:44'),
+(3, 'Weekend Deal', 'Stay 2 nights, pay only for 1.', 50.00, '2025-01-01', '2025-12-31', 1, '2025-05-10 19:25:44');
 
 -- --------------------------------------------------------
 
@@ -314,6 +348,12 @@ ALTER TABLE `roomtasks`
   ADD PRIMARY KEY (`Id`);
 
 --
+-- Indexes for table `specialoffers`
+--
+ALTER TABLE `specialoffers`
+  ADD PRIMARY KEY (`Id`);
+
+--
 -- Indexes for table `users`
 --
 ALTER TABLE `users`
@@ -363,13 +403,19 @@ ALTER TABLE `payments`
 -- AUTO_INCREMENT for table `rooms`
 --
 ALTER TABLE `rooms`
-  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=41;
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=51;
 
 --
 -- AUTO_INCREMENT for table `roomtasks`
 --
 ALTER TABLE `roomtasks`
   MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT for table `specialoffers`
+--
+ALTER TABLE `specialoffers`
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `users`
