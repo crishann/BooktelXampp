@@ -1,4 +1,5 @@
-﻿@model NewBooktel.Models.User
+﻿@model NewBooktel.ViewModels.UserProfileViewModel
+
 @{
     ViewData["Title"] = "Profile";
 }
@@ -98,10 +99,48 @@
             <!-- Profile Details on Left -->
             <div class="profile-info text-start" id="profileDetails">
                 <h4 class="fw-bold mb-3">Your Profile</h4>
-                <p><i class="fas fa-user text-warning me-2"></i> <span id="fullName">@Model.FirstName @Model.LastName</span></p>
-                <p><i class="fas fa-envelope text-warning me-2"></i> <span id="email">@Model.Email</span></p>
-                <p><i class="fas fa-phone text-warning me-2"></i> <span id="contact">@Model.ContactNumber</span></p>
+                <p><i class="fas fa-user text-warning me-2"></i> <span id="fullName">@Model.User.FirstName @Model.User.LastName</span></p>
+                <p><i class="fas fa-envelope text-warning me-2"></i> <span id="email">@Model.User.Email</span></p>
+                <p><i class="fas fa-phone text-warning me-2"></i> <span id="contact">@Model.User.ContactNumber</span></p>
                 <button class="btn btn-custom mt-3" onclick="toggleEdit(true)">Edit Profile</button>
+
+                <!-- Booking History -->
+                <div class="mt-5 w-100">
+                    <h4 class="fw-bold mb-3">Your Bookings</h4>
+                    @if (Model.Bookings != null && Model.Bookings.Count > 0)
+                    {
+                        <table class="table table-bordered table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Booking ID</th>
+                                    <th>Room Type</th>
+                                    <th>Dates</th>
+                                    <th>Status</th>
+                                    <th>Total Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var booking in Model.Bookings)
+                                {
+                                    <tr>
+                                        <td>@booking.Id</td>
+                                        <td>@booking.RoomType</td>
+                                        <td>
+                                            @(booking.CheckInDate?.ToString("MMM dd")) -
+                                            @(booking.CheckOutDate?.ToString("MMM dd"))
+                                        </td>
+                                        <td>@booking.Status</td>
+                                        <td>₱@booking.TotalAmount.ToString("N2")</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    }
+                    else
+                    {
+                        <p>No bookings found.</p>
+                    }
+                </div>
             </div>
 
             <!-- Edit Form on Right -->
@@ -109,11 +148,11 @@
                 @Html.AntiForgeryToken()
                 <h4 class="fw-bold mb-3">Edit Profile</h4>
                 <div class="form-floating mb-3">
-                    <input type="text" class="form-control" id="contactNumber" value="@Model.ContactNumber">
+                    <input type="text" class="form-control" id="contactNumber" value="@Model.User.ContactNumber">
                     <label for="contactNumber">Contact Number</label>
                 </div>
                 <div class="form-floating mb-3">
-                    <input type="email" class="form-control" id="emailAddress" value="@Model.Email">
+                    <input type="email" class="form-control" id="emailAddress" value="@Model.User.Email">
                     <label for="emailAddress">Email Address</label>
                 </div>
                 <div class="form-floating mb-3">
@@ -142,10 +181,7 @@
             document.getElementById("editForm").style.display = showForm ? "block" : "none";
         }
 
-
-
-
-                function saveChanges() {
+        function saveChanges() {
             let contactInput = document.getElementById("contactNumber");
             let emailInput = document.getElementById("emailAddress");
             let passwordInput = document.getElementById("password");
@@ -165,7 +201,7 @@
                 return;
             }
 
-            let formData = new URLSearchParams(); // ✅ Fix: Use URLSearchParams instead of FormData
+            let formData = new URLSearchParams();
             formData.append("Email", newEmail);
             formData.append("NewPassword", newPassword);
 
@@ -175,25 +211,21 @@
                 return;
             }
 
-            console.log("🚀 Sending update request...");
-
-            fetch('/UserDash/Profile', { // ✅ Ensure this matches the correct route
+            fetch('/UserDash/Profile', {
                 method: "POST",
                 body: formData,
                 headers: {
-                    "Content-Type": "application/x-www-form-urlencoded", // ✅ Fix: Correct content type
+                    "Content-Type": "application/x-www-form-urlencoded",
                     "RequestVerificationToken": token
                 }
             })
             .then(response => {
-                console.log("🔍 Server Response:", response);
                 if (!response.ok) {
                     throw new Error("Server returned an error: " + response.status);
                 }
-                return response.json(); // ✅ Fix: Prevent JSON parsing error
+                return response.json();
             })
             .then(data => {
-                console.log("✅ Response received:", data);
                 alert(data.message);
                 if (data.success) {
                     document.getElementById("email").textContent = newEmail;
@@ -202,8 +234,6 @@
             })
             .catch(error => console.error("❌ Error:", error));
         }
-
-
     </script>
 
 </body>

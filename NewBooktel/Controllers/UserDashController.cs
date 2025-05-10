@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Http;
 using System.Security.Cryptography;
 using BCrypt.Net;
 using Microsoft.AspNetCore.Authorization;
+using NewBooktel.ViewModels;
 
 [Authorize] // ✅ Apply authorization at the controller level - requires login for all actions
 public class UserDashController : Controller
@@ -68,19 +69,32 @@ public class UserDashController : Controller
     [HttpGet]
     public async Task<IActionResult> Profile()
     {
-        string? userEmail = HttpContext.Session.GetString("UserEmail"); // Allow null
+        string? userEmail = HttpContext.Session.GetString("UserEmail");
         if (string.IsNullOrEmpty(userEmail))
         {
-            return RedirectToAction("Login", "Auth"); // Redirect to Auth controller's Login
+            return RedirectToAction("Login", "Auth");
         }
 
         var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == userEmail);
         if (user == null)
         {
-            return RedirectToAction("Login", "Auth"); // Redirect to Auth controller's Login
+            return RedirectToAction("Login", "Auth");
         }
 
-        return View(user);
+        // Fetch user's bookings
+        var bookings = await _context.Bookings
+            .Where(b => b.UserId == user.Id)
+            .OrderByDescending(b => b.CreatedAt)
+            .ToListAsync();
+
+        // Wrap both in ViewModel
+        var viewModel = new UserProfileViewModel
+        {
+            User = user,
+            Bookings = bookings
+        };
+
+        return View(viewModel);
     }
 
     // ✅ Update Profile via AJAX (Recommended)
