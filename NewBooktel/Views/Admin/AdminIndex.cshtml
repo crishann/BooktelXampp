@@ -1,15 +1,10 @@
 ﻿@{
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
-    ViewData["Title"] = "AdminIndex";
+    ViewData["Title"] = "Admin Dashboard";
 }
 
-@{
-    Layout = "~/Views/Shared/_AdminLayout.cshtml";
-    ViewData["Title"] = "Dashboard";
-}
-
-<div class="container">
-    <h2 class="mt-3">Admin Dashboard</h2>
+<div class="container mt-4">
+    <h2>Admin Dashboard</h2>
 
     <!-- Dashboard Cards -->
     <div class="row mt-4">
@@ -25,7 +20,7 @@
         <div class="col-md-3">
             <div class="card text-white bg-success">
                 <div class="card-body">
-                    <h5><i class="fas fa-calendar-check"></i>Bookings</h5>
+                    <h5><i class="fas fa-calendar-check"></i> Booking Request</h5>
                     <h2>@ViewBag.NewBookings</h2>
                     <a href="/Admin/BookingReq" class="text-white">View Bookings</a>
                 </div>
@@ -34,7 +29,7 @@
         <div class="col-md-3">
             <div class="card text-white bg-warning">
                 <div class="card-body">
-                    <h5><i class="fas fa-thumbs-up"></i>Payment</h5>
+                    <h5><i class="fas fa-thumbs-up"></i> Payment</h5>
                     <h2>@ViewBag.ConfirmedBookings</h2>
                     <a href="/Admin/Payment" class="text-white">View Payments</a>
                 </div>
@@ -53,35 +48,41 @@
 
     <!-- Latest Bookings Table -->
     <h3 class="mt-5">Latest Bookings</h3>
-    <table class="table table-striped mt-3">
-        <thead>
-            <tr>
-                <th>Code</th>
-                <th>Room</th>
-                <th>Check-in</th>
-                <th>Check-out</th>
-                <th>Total</th>
-                <th>First Name</th>
-                <th>Last Name</th>
-                <th>Email</th>
-                <th>Phone</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var booking in ViewBag.LatestBookings)
-            {
+
+    @if (ViewBag.LatestBookings != null && ViewBag.LatestBookings.Count > 0)
+    {
+        <table class="table table-striped table-bordered mt-3">
+            <thead class="table-dark">
                 <tr>
-                    <td>@booking.Code</td>
-                    <td><span class="badge bg-info">@booking.RoomType</span></td>
-                    <td>@booking.CheckIn.ToShortDateString()</td>
-                    <td>@booking.CheckOut.ToShortDateString()</td>
-                    <td>$@booking.Total</td>
-                    <td>@booking.FirstName</td>
-                    <td>@booking.LastName</td>
-                    <td>@booking.Email</td>
-                    <td>@booking.Phone</td>
+                    <th>Code</th>
+                    <th>Room Type</th>
+                    <th>Check-in</th>
+                    <th>Check-out</th>
+                    <th>Total</th>
+                    <th>Guest Name</th>
+                    <th>Email</th>
+                    <th>Phone</th>
                 </tr>
-            }
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                @foreach (var booking in ViewBag.LatestBookings)
+                {
+                    <tr>
+                        <td>@booking.Code</td>
+                        <td>@booking.RoomType</td>
+                        <td>@booking.CheckInDate.ToShortDateString()</td>
+                        <td>@booking.CheckOutDate.ToShortDateString()</td>
+                        <td>@string.Format("{0:C}", booking.TotalAmount)</td>
+                        <td>@booking.FullName</td>
+                        <td>@booking.Email</td>
+                        <td>@booking.PhoneNumber</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <p class="mt-3">No recent bookings found.</p>
+    }
 </div>

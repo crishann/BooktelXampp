@@ -58,34 +58,26 @@ public class AdminController : Controller
         ViewBag.RoomTypes = _context.Rooms.Count();
         ViewBag.NewBookings = _context.Bookings.Count(b => b.Status == "Pending");
         ViewBag.ConfirmedBookings = _context.Bookings.Count(b => b.PaymentStatus == "paid");
-        ViewBag.SpecialOffers = 0;
+        ViewBag.SpecialOffers = 0; // Will update later if needed
 
-        // ✅ Use ParseExact to prevent FormatException
-        ViewBag.LatestBookings = new List<object>
-        {
-            new {
-                Code = "X880R267",
-                RoomType = "Beach Double Room",
-                CheckIn = DateTime.ParseExact("06/28/2018", "MM/dd/yyyy", CultureInfo.InvariantCulture),
-                CheckOut = DateTime.ParseExact("06/30/2018", "MM/dd/yyyy", CultureInfo.InvariantCulture),
-                Total = 300,
-                FirstName = "John",
-                LastName = "Smith",
-                Email = "test@test.com",
-                Phone = "212-324-5422"
-            },
-            new {
-                Code = "N970N835",
-                RoomType = "Beach Double Room",
-                CheckIn = DateTime.ParseExact("06/28/2018", "MM/dd/yyyy", CultureInfo.InvariantCulture),
-                CheckOut = DateTime.ParseExact("06/30/2018", "MM/dd/yyyy", CultureInfo.InvariantCulture),
-                Total = 300,
-                FirstName = "John",
-                LastName = "Smith",
-                Email = "test@test.com",
-                Phone = "212-324-5422"
-            }
-        };
+        // Fetch latest 5 bookings from the database
+        var latestBookings = _context.Bookings
+            .OrderByDescending(b => b.CreatedAt)
+            .Take(5)
+            .Select(b => new
+            {
+                Code = "BK" + b.Id.ToString("D6"), // Generate code like BK000009
+                b.RoomType,
+                b.CheckInDate,
+                b.CheckOutDate,
+                b.FullName,
+                b.Email,
+                b.PhoneNumber,
+                b.TotalAmount
+            })
+            .ToList();
+
+        ViewBag.LatestBookings = latestBookings;
 
         var rooms = new List<object>
         {
