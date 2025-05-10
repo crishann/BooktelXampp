@@ -20,16 +20,14 @@ namespace NewBooktel.Controllers
         {
             try
             {
-                // 🟡 Retrieve the logged-in user's ID (from claims)
                 string userIdStr = User.FindFirstValue(ClaimTypes.NameIdentifier);
                 if (string.IsNullOrEmpty(userIdStr))
                 {
                     ModelState.AddModelError("", "User is not logged in.");
                     return View("~/Views/Booking/BookingForm.cshtml");
                 }
-                int userId = int.Parse(userIdStr); // Parse the user ID from the claim
+                int userId = int.Parse(userIdStr);
 
-                // 🟡 Retrieve form values
                 DateTime checkInDate = DateTime.Parse(Request.Form["CheckInDate"]);
                 DateTime checkOutDate = DateTime.Parse(Request.Form["CheckOutDate"]);
                 int guest = int.Parse(Request.Form["Guest"]);
@@ -41,7 +39,6 @@ namespace NewBooktel.Controllers
                 string specialRequests = Request.Form["SpecialRequests"];
                 string paymentMethod = Request.Form["PaymentMethod"];
 
-                // 🔵 Compute number of nights
                 int nights = (checkOutDate - checkInDate).Days;
                 if (nights <= 0)
                 {
@@ -49,21 +46,19 @@ namespace NewBooktel.Controllers
                     return View("~/Views/Booking/BookingForm.cshtml");
                 }
 
-                // 🟣 Determine price per night
-                decimal pricePerNight = roomType switch
+                // ✅ Fetch price from the Room table based on RoomType (Name)
+                var room = _context.Rooms.FirstOrDefault(r => r.Name == roomType);
+                if (room == null)
                 {
-                    "Standard" => 2000,
-                    "Deluxe" => 2800,
-                    "Suite" => 3500,
-                    _ => 0
-                };
+                    ModelState.AddModelError("", $"Room type '{roomType}' not found.");
+                    return View("~/Views/Booking/BookingForm.cshtml");
+                }
 
-                decimal totalAmount = pricePerNight * nights;
+                decimal totalAmount = room.Price * nights;
 
-                // 🟢 Create booking object
                 var booking = new Booking
                 {
-                    UserId = userId, // Use the logged-in user's ID
+                    UserId = userId,
                     CheckInDate = checkInDate,
                     CheckOutDate = checkOutDate,
                     Guest = guest,
@@ -80,7 +75,6 @@ namespace NewBooktel.Controllers
                     CreatedAt = DateTime.Now
                 };
 
-                // 🔴 Save to database
                 _context.Bookings.Add(booking);
                 await _context.SaveChangesAsync();
 
