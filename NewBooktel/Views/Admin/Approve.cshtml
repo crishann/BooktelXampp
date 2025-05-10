@@ -1,0 +1,93 @@
+﻿@model NewBooktel.Models.BookingViewModel
+
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    ViewData["Title"] = "Approve Booking";
+}
+
+<div class="container mt-5" style="position: relative;">
+    <!-- Back Button: Red and positioned to the top-left -->
+    <form asp-action="BookingReq" asp-controller="Admin" method="get">
+        <button type="submit" class="btn btn-danger">Back</button>
+    </form>
+
+
+
+
+    <h2 class="mb-4 text-center">Approve Booking</h2>
+
+    @if (Model.Booking != null)
+    {
+        <div class="booking-details card p-4 mb-4 shadow-sm">
+            <h4 class="mb-3">Booking Details</h4>
+            <p><strong>Guest:</strong> @Model.Booking.Guest</p>
+            <p><strong>Room Type:</strong> @Model.Booking.RoomType</p>
+            <p><strong>Full Name:</strong> @Model.Booking.FullName</p>
+        </div>
+
+        <div class="card p-4 shadow-sm">
+            <h4 class="mb-3">Select Room for Booking</h4>
+            <form asp-action="ApproveBooking" asp-controller="Admin" method="post">
+                <input type="hidden" name="bookingId" value="@Model.Booking.Id" />
+
+                <div class="mb-3">
+                    <label for="roomId" class="form-label">Select Room Number (Type: @Model.Booking.RoomType):</label>
+                    <select class="form-select" name="roomId" required>
+                        @foreach (var room in Model.Rooms.Where(r => r.Name == Model.Booking.RoomType))
+                        {
+                            <option value="@room.Id">Room @room.room_number</option>
+                        }
+                    </select>
+                </div>
+
+                <button type="submit" class="btn btn-success w-100 mt-3">Confirm and Approve</button>
+            </form>
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-warning text-center mt-4">
+            No booking data available.
+        </div>
+    }
+</div>
+
+<style>
+    .booking-details {
+        background-color: #f9f9f9;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+        .booking-details h4 {
+            color: #343a40;
+        }
+
+    .btn-danger {
+        width: auto;
+        padding: 10px 20px;
+        font-size: 1rem;
+        text-align: center;
+    }
+
+    .card {
+        border: none;
+        border-radius: 10px;
+    }
+
+    .form-select {
+        padding: 10px;
+        font-size: 1rem;
+    }
+
+    .btn-success {
+        font-size: 1.2rem;
+        padding: 12px;
+    }
+
+    .alert-warning {
+        font-size: 1.1rem;
+        padding: 15px;
+        border-radius: 8px;
+    }
+</style>

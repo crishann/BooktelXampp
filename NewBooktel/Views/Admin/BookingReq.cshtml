@@ -1,4 +1,4 @@
-﻿@model List<NewBooktel.Models.Booking>
+﻿@model NewBooktel.Models.BookingViewModel
 
 @{
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
@@ -8,37 +8,48 @@
 <div class="container mt-5">
     <h2 class="mb-4">Booking Requests</h2>
 
-    @if (Model != null && Model.Count > 0)
+    @if (Model != null && Model.Bookings.Count > 0)
     {
         <div class="table-responsive">
             <table class="table table-hover">
-                <thead class="booktel-header-bg text-white">
+                <thead class="table-dark-custom text-white">
                     <tr>
-                        <th scope="col">Id</th>
-                        <th scope="col">CheckIn Date</th>
-                        <th scope="col">CheckOut Date</th>
-                        <th scope="col">Guest</th>
-                        <th scope="col">RoomType</th>
-                        <th scope="col">FullName</th>
-                        <th scope="col">Email</th>
-                        <th scope="col">PaymentStatus</th>
-                        <th scope="col">Status</th>
+                        <th>ID</th>
+                        <th>Check-In</th>
+                        <th>Check-Out</th>
+                        <th>Guest</th>
+                        <th>Room Type</th>
+                        <th>Full Name</th>
+                        <th>Payment Status</th>
+                        <th>Booking Status</th>
+                        <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var booking in Model)
+                    @foreach (var booking in Model.Bookings)
                     {
                         <tr>
                             <td>@booking.Id</td>
                             <td>@booking.CheckInDate?.ToString("yyyy-MM-dd")</td>
                             <td>@booking.CheckOutDate?.ToString("yyyy-MM-dd")</td>
-
                             <td>@booking.Guest</td>
                             <td>@booking.RoomType</td>
                             <td>@booking.FullName</td>
-                            <td>@booking.Email</td>
                             <td>@booking.PaymentStatus</td>
                             <td>@booking.Status</td>
+                            <td>
+                                @if (booking.Status == "Pending")
+                                {
+                                    <div class="d-flex gap-2">
+                                        <form asp-action="CancelBooking" asp-controller="Admin" method="post">
+                                            <input type="hidden" name="bookingId" value="@booking.Id" />
+                                            <button type="submit" class="btn btn-sm btn-danger">Cancel</button>
+                                        </form>
+                                        <a asp-action="Approve" asp-controller="Admin" asp-route-bookingId="@booking.Id" class="btn btn-sm btn-success text-white">Approve</a>
+                                    </div>
+                                }
+                            </td>
+
                         </tr>
                     }
                 </tbody>
@@ -53,6 +64,32 @@
     }
 </div>
 
+<!-- Room Assignment Modal -->
+<div class="modal fade" id="roomAssignmentModal" tabindex="-1" aria-labelledby="roomAssignmentModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="roomAssignmentModalLabel">Assign Room</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form asp-action="AssignRoom" asp-controller="Admin" method="post">
+                    <input type="hidden" name="bookingId" id="bookingId" />
+                    <label for="roomId">Select Room:</label>
+                    <select class="form-select" name="roomId" required>
+                        @foreach (var room in Model.Rooms)
+                        {
+                            <option value="@room.Id">@room.Name</option>
+                        }
+                    </select>
+                    <button type="submit" class="btn btn-primary mt-3">Assign Room</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Styles -->
 <style>
     .table {
         border-collapse: collapse;

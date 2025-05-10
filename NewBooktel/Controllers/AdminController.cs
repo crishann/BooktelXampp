@@ -7,10 +7,22 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
 using MySqlConnector;
 using NewBooktel.Models;
+using NewBooktel.Data;
+
+
 
 [Authorize(Roles = "admin")] // ✅ Restrict Access to Admins Only using Attribute
 public class AdminController : Controller
 {
+    private readonly ApplicationDbContext _context;
+    private readonly string _connectionString;
+
+    public AdminController(ApplicationDbContext context, IConfiguration configuration)
+    {
+        _context = context;
+        _connectionString = configuration.GetConnectionString("DefaultConnection");
+    }
+
     // ✅ Removed the manual IsAdmin check as [Authorize] handles it
     private readonly string connectionString = "server=localhost;database=bookteldb;user=root;password=;";
 
@@ -87,26 +99,22 @@ public class AdminController : Controller
 
         return View();
     }
-    private readonly string _connectionString;
 
-    public AdminController(IConfiguration configuration)
-    {
-        // Get the connection string from appsettings.json
-        _connectionString = configuration.GetConnectionString("DefaultConnection");
-    }
+
+    // GET: /Admin/BookingReq
     public async Task<IActionResult> BookingReq()
     {
+        
         List<Booking> bookings = new List<Booking>();
+        List<Room> rooms = new List<Room>();
 
-        // Connect to the database
+        // First, connect to the database for the bookings query
         using (var connection = new MySqlConnection(_connectionString))
         {
             await connection.OpenAsync();
 
             // Query to retrieve data from the 'bookings' table
             var query = "SELECT * FROM bookings";
-
-            // Create the command and execute it
             using var cmd = new MySqlCommand(query, connection);
             using var reader = await cmd.ExecuteReaderAsync();
 
@@ -134,8 +142,175 @@ public class AdminController : Controller
             }
         }
 
-        return View("~/Views/Admin/BookingReq.cshtml", bookings);
+        // Now, connect to the database for the rooms query
+        using (var connection = new MySqlConnection(_connectionString))
+        {
+            await connection.OpenAsync();
+
+            // Query to retrieve rooms (adjust this based on your needs)
+            var roomQuery = "SELECT * FROM rooms WHERE Status = 'Available'";
+            using var roomCmd = new MySqlCommand(roomQuery, connection);
+            using var roomReader = await roomCmd.ExecuteReaderAsync();
+
+            // Loop through the results and map them to the Room model
+            while (await roomReader.ReadAsync())
+            {
+                var statusString = roomReader["status"].ToString();  // Get status from the database as a string
+
+                // Try to convert the string to a RoomStatus enum
+                RoomStatus roomStatus = RoomStatus.Available;  // Default to Available if conversion fails
+                if (!Enum.TryParse(statusString, true, out roomStatus))
+                {
+                    roomStatus = RoomStatus.Available; // Default or fallback status
+                }
+
+                rooms.Add(new Room
+                {
+                    Id = Convert.ToInt32(roomReader["Id"]),
+                    room_number = Convert.ToInt32(roomReader["room_number"]),
+                    Name = roomReader["Name"].ToString(),
+                    Price = Convert.ToDecimal(roomReader["Price"]),
+                    status = roomStatus,  // Assign the parsed enum value
+                    ImageUrl = roomReader["ImageUrl"].ToString()
+                });
+            }
+        }
+
+        // Create the view model and return the data to the view
+        var viewModel = new BookingViewModel
+        {
+            Bookings = bookings,
+            Rooms = rooms
+        };
+
+        return View("~/Views/Admin/BookingReq.cshtml", viewModel); // Pass the view model to the view
+
+        
     }
+
+    public IActionResult Back()
+    {
+        var bookings = _context.Bookings.ToList(); // or wherever you get your bookings
+        var model = new BookingViewModel
+        {
+            Bookings = bookings
+        };
+
+        return View("BookingReq", model);
+    }
+
+
+
+    public IActionResult Approve(int bookingId)
+    {
+        var booking = _context.Bookings.FirstOrDefault(b => b.Id == bookingId);
+        if (booking == null)
+        {
+            return NotFound();
+        }
+
+        var rooms = _context.Rooms.ToList();
+
+        var viewModel = new BookingViewModel
+        {
+            Booking = booking,
+            Rooms = rooms
+        };
+
+        return View(viewModel);
+    }
+
+    [HttpPost]
+    public IActionResult ApproveBooking(int bookingId, int roomId)
+    {
+        var booking = _context.Bookings.FirstOrDefault(b => b.Id == bookingId);
+        if (booking == null)
+        {
+            return NotFound();
+        }
+
+        booking.Status = "Approved";
+        booking.Room_id = roomId;
+
+        _context.SaveChanges();
+
+        return RedirectToAction("BookingReq");
+    }
+
+
+
+
+    // GET: APPROVE BOOKING!
+    // Approve the booking and show room assignment modal
+    [HttpPost]
+    public IActionResult ApproveBooking(int bookingId)
+    {
+        // Set booking status to Pending confirmation until room is assigned
+        var booking = _context.Bookings.FirstOrDefault(b => b.Id == bookingId);
+        if (booking != null)
+        {
+            // Set status to 'Pending Confirmation'
+            booking.Status = "Pending Confirmation";
+            _context.SaveChanges();
+        }
+
+        // Get available rooms by comparing the RoomStatus enum
+        var rooms = _context.Rooms.Where(r => r.status == RoomStatus.Available).ToList();
+        ViewBag.Rooms = rooms;
+
+        return View();  // or redirect to another view if needed
+    }
+
+
+    // Cancel the booking
+    [HttpPost]
+    public IActionResult CancelBooking(int bookingId)
+    {
+        var booking = _context.Bookings.FirstOrDefault(b => b.Id == bookingId);
+        if (booking != null)
+        {
+            booking.Status = "Cancelled";
+            _context.SaveChanges();
+        }
+
+        return RedirectToAction("BookingRequests"); // Redirect back to the booking list
+    }
+
+
+    // Assign room after booking approval
+    [HttpPost]
+    public IActionResult AssignRoom(int bookingId, int roomId)
+    {
+        var booking = _context.Bookings.FirstOrDefault(b => b.Id == bookingId);
+        var room = _context.Rooms.FirstOrDefault(r => r.Id == roomId);
+
+        if (booking != null && room != null)
+        {
+            // Check if the room is available
+            if (room.status == RoomStatus.Available)
+            {
+                // Update booking status to "Confirmed"
+                booking.Status = "Confirmed";
+                booking.Room_id = roomId; // Assign the selected room to the booking
+
+                // Update room status to "Occupied"
+                room.status = RoomStatus.Occupied;
+
+                _context.SaveChanges();
+            }
+            else
+            {
+                // Room is not available, show error message
+                TempData["ErrorMessage"] = "The selected room is not available.";
+                return RedirectToAction("BookingReq"); // Or another appropriate action
+            }
+        }
+
+        return RedirectToAction("BookingReq"); // Redirect back to the booking list
+    }
+
+
+
 
     //public IActionResult Feedback()
     //{
@@ -164,8 +339,13 @@ public class AdminController : Controller
 
     public IActionResult Rooms()
     {
-        return View();
+        var rooms = _context.Rooms.ToList(); // or filter logic
+        return View(rooms); // This must not be null
     }
+
+
+  
+
 
     public IActionResult AddRoom()
     {
@@ -186,4 +366,26 @@ public class AdminController : Controller
         // Redirect or return a response
         return RedirectToAction("Rooms");  // Redirect back to the rooms page
     }
+
+
+
+    public IActionResult RoomsManagement(string filter = "")
+    {
+        var rooms = _context.Rooms.AsQueryable();
+
+        // Apply filtering based on the string values for room status
+        if (filter == "available")
+            rooms = rooms.Where(r => r.status == RoomStatus.Available);
+        else if (filter == "occupied")
+            rooms = rooms.Where(r => r.status == RoomStatus.Occupied);
+        else if (filter == "maintenance")
+            rooms = rooms.Where(r => r.status == RoomStatus.Maintenance);
+
+        rooms = rooms.OrderBy(r => r.Name); // Sort by room type
+
+        return View(rooms.ToList()); // Convert to list for passing to the view
+    }
+
+
+
 }

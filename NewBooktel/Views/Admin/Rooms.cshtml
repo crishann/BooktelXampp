@@ -1,139 +1,58 @@
-﻿@{
+﻿@model List<NewBooktel.Models.Room>
+@using NewBooktel.Models
+@{
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
     ViewData["Title"] = "Rooms Management";
+
 }
+<style>
+    .status-available {
+        color: green !important;
+        font-weight: bold !important;
+    }
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewData["Title"] - Admin Dashboard</title>
+    .status-occupied {
+        color: red !important;
+        font-weight: bold !important;
+    }
 
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    .status-maintenance {
+        color: orange !important;
+        font-weight: bold !important;
+    }
+</style>
 
-    <style>
-        body {
-            background-color: #f8f9fa;
+
+<h1>Rooms Management</h1>
+
+
+<table class="table table-bordered table-hover">
+    <thead class="table-dark">
+        <tr>
+            <th>Room Number</th>
+            <th>Type</th>
+            <th>Price</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var room in Model.OrderBy(r => r.Name))
+        {
+            var statusClass = room.status switch
+            {
+                RoomStatus.Available => "status-available",
+                RoomStatus.Occupied => "status-occupied",
+                RoomStatus.Maintenance => "status-maintenance",
+                _ => ""
+            };
+
+            <tr>
+                <td>@room.room_number</td>
+                <td>@room.Name</td>
+                <td>₱@room.Price.ToString("N0")</td>
+                <td class="@statusClass">@room.status</td>
+            </tr>
         }
 
-        .sidebar {
-            width: 250px;
-            height: 100vh;
-            background: #00163a;
-            color: white;
-            padding: 20px;
-            position: fixed;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            margin-right: 0px;
-        }
-
-        .content {
-            margin-left: 260px;
-            padding: 20px;
-        }
-
-        .logout-btn {
-            background: #dc3545;
-            color: white;
-            border: none;
-            width: 100%;
-            padding: 10px;
-            text-align: center;
-            font-weight: bold;
-            border-radius: 5px;
-            margin-top: auto;
-        }
-
-            .logout-btn:hover {
-                background: #c82333;
-                color: white;
-            }
-
-        /* ✅ Change text color to yellow for active sidebar links */
-        .nav-link.active {
-            background-color: #f8f9fa; /* Light gray background */
-            color: black !important; /* Text color */
-            border-top-right-radius: 20px;
-            border-bottom-right-radius: 20px;
-            padding-left: 15px;
-            padding-top: 8px;
-            padding-bottom: 8px;
-            margin-right: 0;
-            overflow: hidden;
-            white-space: nowrap;
-        }
-
-        .room-card {
-            background: white;
-            padding: 15px;
-            border-radius: 8px;
-            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-            margin-bottom: 15px;
-        }
-
-            .room-card h5 {
-                margin-bottom: 10px;
-            }
-
-            .room-card p {
-                margin-bottom: 5px;
-            }
-
-            .room-card .btn {
-                width: 100%;
-            }
-    </style>
-</head>
-<body>
-
- 
-
-        <h1>Rooms Management</h1>
-        <div class="mb-3">
-            <a href="/Admin/AddRoom" class="btn btn-primary">Add New Room</a>
-        </div>
-
-        <!-- Room Cards Section -->
-        <div class="row">
-            <div class="col-md-4">
-                <div class="room-card">
-                    <h5>Deluxe Room</h5>
-                    <p><strong>Price per night:</strong> ₱2,800</p>
-                    <p><strong>Guests:</strong> 3</p>
-                    <p><strong>Status:</strong> Available</p>
-                    <a href="/Admin/EditRoom/1" class="btn btn-warning">Edit Room</a>
-                    <a href="/Admin/DeleteRoom/1" class="btn btn-danger mt-2">Delete Room</a>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="room-card">
-                    <h5>Standard Room</h5>
-                    <p><strong>Price per night:</strong> ₱2,000</p>
-                    <p><strong>Guests:</strong> 2</p>
-                    <p><strong>Status:</strong> Booked</p>
-                    <a href="/Admin/EditRoom/2" class="btn btn-warning">Edit Room</a>
-                    <a href="/Admin/DeleteRoom/2" class="btn btn-danger mt-2">Delete Room</a>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="room-card">
-                    <h5>Luxury Suite</h5>
-                    <p><strong>Price per night:</strong> ₱3,500</p>
-                    <p><strong>Guests:</strong> 4</p>
-                    <p><strong>Status:</strong> Available</p>
-                    <a href="/Admin/EditRoom/3" class="btn btn-warning">Edit Room</a>
-                    <a href="/Admin/DeleteRoom/3" class="btn btn-danger mt-2">Delete Room</a>
-                </div>
-            </div>
-        </div>
-
-
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
-</body>
-</html>
+    </tbody>
+</table>
