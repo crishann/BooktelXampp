@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 10, 2025 at 03:46 PM
+-- Generation Time: May 10, 2025 at 05:16 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -30,7 +30,8 @@ SET time_zone = "+00:00";
 CREATE TABLE `bookings` (
   `Id` int(11) NOT NULL,
   `userid` int(11) NOT NULL,
-  `room_id` int(11) DEFAULT NULL,
+  `room_id` int(11) DEFAULT 0,
+  `room_num` int(11) DEFAULT NULL,
   `CheckInDate` date DEFAULT NULL,
   `CheckOutDate` date DEFAULT NULL,
   `Guest` int(11) DEFAULT NULL,
@@ -51,9 +52,9 @@ CREATE TABLE `bookings` (
 -- Dumping data for table `bookings`
 --
 
-INSERT INTO `bookings` (`Id`, `userid`, `room_id`, `CheckInDate`, `CheckOutDate`, `Guest`, `RoomType`, `FullName`, `Email`, `PhoneNumber`, `Address`, `SpecialRequests`, `PaymentMethod`, `PaymentStatus`, `TotalAmount`, `Status`, `CreatedAt`) VALUES
-(9, 21, 3, '2025-05-07', '2025-05-10', 2, 'Double Deluxe Room', 'james racal', 'lbjames@gmail.com', '0912312312312', 'mabolo', 'asdasdasdsad', 'PayPal', 'Pending', 8400.00, 'Approved', '2025-05-07 05:55:39'),
-(10, 3, 10, '2025-05-02', '2025-05-08', 1, 'Standard Room', 'cristian torrejos', 'cristiantorrejos@gmail.com', '0912312312312', 'blk 30 lot 8 ', 'hello po', 'PayPal', 'Pending', 14100.00, 'Approved', '2025-05-10 21:27:14');
+INSERT INTO `bookings` (`Id`, `userid`, `room_id`, `room_num`, `CheckInDate`, `CheckOutDate`, `Guest`, `RoomType`, `FullName`, `Email`, `PhoneNumber`, `Address`, `SpecialRequests`, `PaymentMethod`, `PaymentStatus`, `TotalAmount`, `Status`, `CreatedAt`) VALUES
+(11, 3, 11, 111, '2025-05-01', '2025-05-10', 1, 'Standard Room', 'cristian torrejos', 'cristian@gmail.com', '0912312312312', 'mabolo', '13213', 'PayPal', 'Pending', 21150.00, 'Approved', '2025-05-10 22:55:28'),
+(12, 3, NULL, NULL, '2025-05-10', '2025-05-13', 1, 'Standard Room', 'cristian torrejos', 'cristian@gmail.com', '0912312312312', 'blk 30 lot 8 ', '123qweq', 'PayPal', 'Pending', 7050.00, 'Pending', '2025-05-10 23:09:23');
 
 -- --------------------------------------------------------
 
@@ -150,7 +151,7 @@ INSERT INTO `rooms` (`Id`, `room_number`, `Name`, `Price`, `status`, `ImageUrl`)
 (8, 108, 'Standard Room', 2350.00, 'available', '/img/room3.svg'),
 (9, 109, 'Standard Room', 2350.00, 'available', '/img/room3.svg'),
 (10, 110, 'Standard Room', 2350.00, 'Occupied', '/img/room3.svg'),
-(11, 111, 'Standard Room', 2350.00, 'available', '/img/room3.svg'),
+(11, 111, 'Standard Room', 2350.00, 'Occupied', '/img/room3.svg'),
 (12, 112, 'Standard Room', 2350.00, 'available', '/img/room3.svg'),
 (13, 113, 'Standard Room', 2350.00, 'available', '/img/room3.svg'),
 (14, 114, 'Double Room', 5000.00, 'available', '/img/room4.svg'),
@@ -374,7 +375,7 @@ ALTER TABLE `__efmigrationshistory`
 -- AUTO_INCREMENT for table `bookings`
 --
 ALTER TABLE `bookings`
-  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `contactus`
