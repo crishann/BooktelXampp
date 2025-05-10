@@ -220,17 +220,28 @@ public class AdminController : Controller
         return View(viewModel);
     }
 
+
     [HttpPost]
-    public IActionResult ApproveBooking(int bookingId, int roomId)
+    public IActionResult ApproveBooking(int bookingId, int room_number)
     {
+        Console.WriteLine($"Booking ID: {bookingId}, Room Number: {room_number}");  // Add this for debugging
+
         var booking = _context.Bookings.FirstOrDefault(b => b.Id == bookingId);
         if (booking == null)
         {
-            return NotFound();
+            return NotFound("Booking not found.");
+        }
+
+        var room = _context.Rooms.FirstOrDefault(r => r.room_number == room_number);
+        if (room == null)
+        {
+            return NotFound("Room not found.");
         }
 
         booking.Status = "Approved";
-        booking.Room_id = roomId;
+        booking.Room_id = room.Id;
+
+        room.status = RoomStatus.Occupied;
 
         _context.SaveChanges();
 
@@ -240,26 +251,29 @@ public class AdminController : Controller
 
 
 
+
+
+
     // GET: APPROVE BOOKING!
     // Approve the booking and show room assignment modal
-    [HttpPost]
-    public IActionResult ApproveBooking(int bookingId)
-    {
-        // Set booking status to Pending confirmation until room is assigned
-        var booking = _context.Bookings.FirstOrDefault(b => b.Id == bookingId);
-        if (booking != null)
-        {
-            // Set status to 'Pending Confirmation'
-            booking.Status = "Pending Confirmation";
-            _context.SaveChanges();
-        }
+    //[HttpPost]
+    //public IActionResult ApproveBooking(int bookingId)
+    //{
+    //    // Set booking status to Pending confirmation until room is assigned
+    //    var booking = _context.Bookings.FirstOrDefault(b => b.Id == bookingId);
+    //    if (booking != null)
+    //    {
+    //        // Set status to 'Pending Confirmation'
+    //        booking.Status = "Pending Confirmation";
+    //        _context.SaveChanges();
+    //    }
 
-        // Get available rooms by comparing the RoomStatus enum
-        var rooms = _context.Rooms.Where(r => r.status == RoomStatus.Available).ToList();
-        ViewBag.Rooms = rooms;
+    //    // Get available rooms by comparing the RoomStatus enum
+    //    var rooms = _context.Rooms.Where(r => r.status == RoomStatus.Available).ToList();
+    //    ViewBag.Rooms = rooms;
 
-        return View();  // or redirect to another view if needed
-    }
+    //    return View();  // or redirect to another view if needed
+    //}
 
 
     // Cancel the booking

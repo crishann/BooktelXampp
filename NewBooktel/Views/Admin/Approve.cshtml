@@ -32,16 +32,17 @@
 
                 <div class="mb-3">
                     <label for="roomId" class="form-label">Select Room Number (Type: @Model.Booking.RoomType):</label>
-                    <select class="form-select" name="roomId" required>
+                    <select class="form-select" name="room_number" required>
                         @foreach (var room in Model.Rooms.Where(r => r.Name == Model.Booking.RoomType))
                         {
-                            <option value="@room.Id">Room @room.room_number</option>
+                            <option value="@room.room_number">Room @room.room_number</option>
                         }
                     </select>
                 </div>
 
                 <button type="submit" class="btn btn-success w-100 mt-3">Confirm and Approve</button>
             </form>
+
         </div>
     }
     else
