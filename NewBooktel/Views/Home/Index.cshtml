@@ -204,7 +204,7 @@
         <h2 class="text-center fw-bold">Room Types</h2>
         <div class="row mt-4">
 
-            @foreach (var room in Model)
+            @foreach (var room in Model.GroupBy(r => r.Name).Select(g => g.First()))
             {
                 <div class="col-md-3">
                     <div class="room-card">
@@ -219,6 +219,7 @@
                     </div>
                 </div>
             }
+
 
         </div>
     </div>
